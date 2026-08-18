@@ -12,27 +12,48 @@
       try { return typeof currentPatientId !== "undefined" ? currentPatientId : null; }
       catch (_) { return null; }
     }
-    function scroll() { messages.scrollTop = messages.scrollHeight; }
+
+    /* Keep compatibility with the original index.html code. */
+    window.scrollMessages = function () {
+      messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" });
+    };
+
+    function scroll() {
+      messages.scrollTop = messages.scrollHeight;
+    }
 
     function message(role, text) {
       const row = document.createElement("div");
       row.className = `message ${role}`;
       row.innerHTML = `<div class="message-avatar">${role === "assistant" ? "✚" : ""}</div><div class="message-content"><div class="message-bubble"></div><div class="message-label">${role === "assistant" ? "ToomMED" : "You"}</div></div>`;
       row.querySelector(".message-bubble").textContent = text;
-      messages.appendChild(row); scroll(); return row;
+      messages.appendChild(row);
+      scroll();
+      return row;
     }
 
     function thinking() {
       const row = document.createElement("div");
       row.className = "message assistant thinking-message";
       row.innerHTML = `<div class="message-avatar">✚</div><div class="message-content"><div class="message-bubble"><div class="live-thinking"><span class="live-spinner">✚</span><span class="live-status">ToomMED is thinking...</span><span class="live-time">0s</span></div></div></div>`;
-      messages.appendChild(row); scroll();
+      messages.appendChild(row);
+      scroll();
+
       const status = row.querySelector(".live-status");
       const time = row.querySelector(".live-time");
       const spinner = row.querySelector(".live-spinner");
       const started = Date.now();
-      const timer = setInterval(() => { time.textContent = `${Math.floor((Date.now()-started)/1000)}s`; scroll(); }, 250);
-      return { row, status, spinner, stop(){ clearInterval(timer); } };
+      const timer = setInterval(() => {
+        time.textContent = `${Math.floor((Date.now() - started) / 1000)}s`;
+        scroll();
+      }, 250);
+
+      return {
+        row,
+        status,
+        spinner,
+        stop() { clearInterval(timer); }
+      };
     }
 
     async function sendMessage() {
@@ -40,20 +61,38 @@
       const id = getPatientId();
       if (!text || !id || send.disabled) return;
 
-      input.value = ""; input.style.height = "auto"; input.disabled = true; send.disabled = true;
-      const empty = document.getElementById("empty-state"); if (empty) empty.remove();
+      input.value = "";
+      input.style.height = "auto";
+      input.disabled = true;
+      send.disabled = true;
+
+      const empty = document.getElementById("empty-state");
+      if (empty) empty.remove();
+
       message("user", text);
       const t = thinking();
-      let assistantRow = null, assistantBubble = null, reply = "", gotToken = false;
+      let assistantRow = null;
+      let assistantBubble = null;
+      let reply = "";
+      let gotToken = false;
 
       try {
         const res = await fetch(`/patients/${id}/chat`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", "Accept": "text/plain" },
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "text/plain"
+          },
           body: JSON.stringify({ message: text, stream: true })
         });
-        if (!res.ok) throw new Error(`${res.status}: ${await res.text()}`);
-        if (!res.body) throw new Error("No streaming response body received.");
+
+        if (!res.ok) {
+          throw new Error(`${res.status}: ${await res.text()}`);
+        }
+
+        if (!res.body) {
+          throw new Error("No streaming response body received.");
+        }
 
         const reader = res.body.getReader();
         const decoder = new TextDecoder("utf-8");
@@ -61,6 +100,7 @@
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
+
           const chunk = decoder.decode(value, { stream: true });
           if (!chunk) continue;
 
@@ -71,15 +111,18 @@
           }
 
           reply += chunk;
+
           if (!assistantRow) {
             assistantRow = message("assistant", "");
             assistantBubble = assistantRow.querySelector(".message-bubble");
           }
+
           assistantBubble.textContent = reply;
           scroll();
         }
 
         reply += decoder.decode();
+
         if (!assistantRow) {
           assistantRow = message("assistant", reply || "No response received.");
           assistantBubble = assistantRow.querySelector(".message-bubble");
@@ -92,19 +135,45 @@
           if (banner) banner.classList.add("visible");
           assistantRow.classList.add("emergency");
         }
+
         scroll();
-        if (typeof loadFacts === "function") loadFacts().catch(console.error);
+
+        if (typeof loadFacts === "function") {
+          loadFacts().catch(console.error);
+        }
       } catch (err) {
         console.error("ToomMED chat error:", err);
         message("assistant", `Unable to get a response. ${err.message}`);
       } finally {
-        t.stop(); t.row.remove(); input.disabled = false; send.disabled = false; input.focus();
+        t.stop();
+        t.row.remove();
+        input.disabled = false;
+        send.disabled = false;
+        input.focus();
       }
     }
 
+    /* Replace the button handler. */
     send.onclick = sendMessage;
-    input.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } };
-    input.oninput = () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight,130)+"px"; };
+
+    /*
+     * The original index.html has its own keydown listener.
+     * Capture this event first and stop it so the old handler cannot
+     * call the obsolete sendMessage()/scrollMessages path a second time.
+     */
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        sendMessage();
+      }
+    }, true);
+
+    input.oninput = () => {
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 130) + "px";
+    };
+
     console.log("ToomMED live streaming chat installed.");
   }
 
@@ -119,5 +188,10 @@
     @keyframes toommed-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
   `;
   document.head.appendChild(style);
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install); else install();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", install);
+  } else {
+    install();
+  }
 })();
