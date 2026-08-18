@@ -52,8 +52,12 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def index():
-    """Browser-only chat UI - no curl or Swagger forms needed."""
-    return FileResponse(STATIC_DIR / "index.html")
+    """Serve the UI and install the browser-side chat reliability fix."""
+    html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    fix = '<script src="/static/chat-fix.js"></script>'
+    if fix not in html:
+        html = html.replace("</body>", f"{fix}\n</body>")
+    return HTMLResponse(content=html)
 
 
 def get_patient_or_404(patient_id: int, db: Session) -> models.Patient:
