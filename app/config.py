@@ -16,7 +16,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 
 # Gemini 2.5 Flash-Lite has a free API tier and is designed for low-cost,
 # high-volume text tasks. Change this with GEMINI_MODEL if desired.
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "models/gemini-3.5-flash-lite")
 
 # --- Generation parameters ---
 TEMPERATURE = float(os.getenv("MODEL_TEMPERATURE", "0.3"))
