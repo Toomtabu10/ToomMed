@@ -2,401 +2,3247 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ToomMED</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ToomMed — Local Medical Assistant</title>
+
 <style>
-  :root {
-    --bg: #f4f6f8;
-    --panel: #ffffff;
-    --border: #dfe3e8;
-    --text: #1f2937;
-    --muted: #6b7280;
-    --accent: #2563eb;
-    --danger: #b91c1c;
-    --user-bubble: #2563eb;
-    --assistant-bubble: #eef2f7;
-  }
-  * { box-sizing: border-box; }
-  body {
+
+:root {
+    --bg: #f5f7f8;
+    --surface: #ffffff;
+    --surface-soft: #f8fafb;
+
+    --border: #e5e9ec;
+    --border-dark: #d7dde1;
+
+    --text: #172126;
+    --muted: #718087;
+    --muted-light: #9aa5aa;
+
+    --primary: #147d73;
+    --primary-dark: #0f665e;
+    --primary-soft: #e7f5f2;
+
+    --danger: #c43d3d;
+    --danger-soft: #fff0f0;
+
+    --warning: #b7791f;
+    --warning-soft: #fff8e8;
+
+    --user: #147d73;
+    --assistant: #f1f5f5;
+
+    --shadow: 0 8px 30px rgba(24, 39, 45, 0.06);
+
+    --radius: 14px;
+}
+
+
+/* --------------------------------------------------
+   RESET
+-------------------------------------------------- */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family:
+        Inter,
+        ui-sans-serif,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+
     background: var(--bg);
     color: var(--text);
-    display: flex;
+
+    overflow: hidden;
+}
+
+
+/* --------------------------------------------------
+   APP
+-------------------------------------------------- */
+
+.app {
+    display: grid;
+
+    grid-template-columns:
+        250px
+        minmax(420px, 1fr)
+        310px;
+
     height: 100vh;
-  }
-  #sidebar {
-    width: 300px;
-    background: var(--panel);
+}
+
+
+/* --------------------------------------------------
+   SIDEBAR
+-------------------------------------------------- */
+
+.sidebar {
+    background: var(--surface);
+
     border-right: 1px solid var(--border);
-    padding: 16px;
-    overflow-y: auto;
-    flex-shrink: 0;
-  }
-  #main {
-    flex: 1;
+
     display: flex;
     flex-direction: column;
+
     min-width: 0;
-  }
-  h1 { font-size: 16px; margin: 0 0 12px; }
-  h2 { font-size: 13px; text-transform: uppercase; color: var(--muted); margin: 20px 0 8px; }
-  select, input, textarea, button {
-    width: 100%;
-    font-size: 14px;
-    padding: 8px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-bottom: 6px;
-    font-family: inherit;
-  }
-  button {
-    background: var(--accent);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
-  }
-  button:hover { opacity: 0.9; }
-  button.secondary { background: #e5e7eb; color: var(--text); }
-  .fact-list { font-size: 13px; margin-bottom: 8px; }
-  .fact-item {
-    background: #f9fafb;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 8px;
-    margin-bottom: 4px;
-  }
-  .fact-item small { color: var(--muted); display: block; }
-  .spinner {
-    display: inline-block;
-    width: 13px;
-    height: 13px;
-    border: 2px solid rgba(0,0,0,0.15);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    margin-right: 8px;
-    vertical-align: -2px;
-    animation: spin 0.7s linear infinite;
-  }
-  .msg.user .spinner { border-color: rgba(255,255,255,0.35); border-top-color: #fff; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .thinking-text { animation: pulse 1.2s ease-in-out infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-  #banner {
-    background: #fff7ed;
-    border-bottom: 1px solid #fed7aa;
-    color: #9a3412;
-    font-size: 12.5px;
-    padding: 8px 16px;
-  }
-  #chat-header {
-    padding: 12px 16px;
+}
+
+
+/* Brand */
+
+.brand {
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 20px;
+
     border-bottom: 1px solid var(--border);
-    background: var(--panel);
-    font-weight: 600;
-  }
-  #messages {
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 11px;
+
+    background: var(--primary);
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 19px;
+
+    margin-right: 10px;
+}
+
+.brand-name {
+    font-size: 17px;
+    font-weight: 750;
+    letter-spacing: -0.3px;
+}
+
+.brand-subtitle {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+
+/* Patient area */
+
+.patient-area {
+    padding: 18px 14px;
+
     flex: 1;
+
     overflow-y: auto;
-    padding: 16px;
+}
+
+.section-label {
+    font-size: 10px;
+
+    font-weight: 750;
+
+    color: var(--muted);
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
+
+    margin: 4px 7px 10px;
+}
+
+
+/* Search */
+
+.search-box {
+    position: relative;
+
+    margin-bottom: 12px;
+}
+
+.search-box input {
+    width: 100%;
+
+    padding: 10px 12px 10px 34px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    background: var(--surface-soft);
+
+    outline: none;
+
+    font-size: 13px;
+
+    color: var(--text);
+}
+
+.search-box span {
+    position: absolute;
+
+    left: 12px;
+    top: 9px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+/* New patient */
+
+.new-patient {
+    display: flex;
+
+    gap: 7px;
+
+    margin-bottom: 18px;
+}
+
+.new-patient input {
+    min-width: 0;
+    flex: 1;
+}
+
+.new-patient button {
+    width: 40px;
+    flex-shrink: 0;
+}
+
+
+/* Inputs */
+
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+input {
+    padding: 9px 10px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: white;
+
+    color: var(--text);
+
+    font-size: 13px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(20, 125, 115, 0.08);
+}
+
+
+/* Patient cards */
+
+.patient-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
-  .msg { max-width: 70%; padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.4; white-space: pre-wrap; }
-  .msg.user { align-self: flex-end; background: var(--user-bubble); color: white; border-bottom-right-radius: 4px; }
-  .msg.assistant { align-self: flex-start; background: var(--assistant-bubble); color: var(--text); border-bottom-left-radius: 4px; }
-  .msg.emergency { border: 2px solid var(--danger); }
-  #composer {
+    gap: 5px;
+}
+
+.patient-card {
     display: flex;
-    gap: 8px;
-    padding: 12px 16px;
+    align-items: center;
+
+    width: 100%;
+
+    padding: 10px;
+
+    border-radius: 11px;
+
+    border: 1px solid transparent;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition: 0.15s ease;
+}
+
+.patient-card:hover {
+    background: var(--surface-soft);
+}
+
+.patient-card.active {
+    background: var(--primary-soft);
+
+    border-color: #c9e9e4;
+}
+
+.patient-avatar {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background: #e9eeee;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--primary);
+
+    font-weight: 700;
+
+    font-size: 12px;
+
+    margin-right: 10px;
+
+    flex-shrink: 0;
+}
+
+.patient-card.active .patient-avatar {
+    background: var(--primary);
+    color: white;
+}
+
+.patient-info {
+    min-width: 0;
+}
+
+.patient-name {
+    font-size: 13px;
+    font-weight: 650;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.patient-meta {
+    font-size: 11px;
+    color: var(--muted);
+
+    margin-top: 2px;
+}
+
+
+/* Sidebar footer */
+
+.sidebar-footer {
+    padding: 14px;
+
     border-top: 1px solid var(--border);
-    background: var(--panel);
-  }
-  #composer textarea { resize: none; height: 44px; margin: 0; }
-  #composer button { width: 100px; margin: 0; }
-  #empty-state { margin: auto; color: var(--muted); text-align: center; padding: 40px; }
-  .disclaimer { font-size: 11.5px; color: var(--muted); padding: 4px 16px 10px; }
+}
+
+.local-status {
+    display: flex;
+    align-items: center;
+
+    padding: 9px;
+
+    background: var(--surface-soft);
+
+    border-radius: 10px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #27a36a;
+
+    margin-right: 8px;
+}
+
+.status-text {
+    font-size: 11px;
+}
+
+.status-title {
+    font-weight: 650;
+}
+
+.status-subtitle {
+    color: var(--muted);
+    margin-top: 1px;
+}
+
+
+/* --------------------------------------------------
+   CHAT
+-------------------------------------------------- */
+
+.chat {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--bg);
+}
+
+
+/* Header */
+
+.chat-header {
+    height: 72px;
+
+    background: var(--surface);
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 24px;
+}
+
+.patient-header {
+    display: flex;
+    align-items: center;
+}
+
+.header-avatar {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+
+    background: var(--primary-soft);
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 750;
+
+    margin-right: 11px;
+}
+
+.header-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.header-meta {
+    font-size: 11px;
+    color: var(--muted);
+
+    margin-top: 3px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 7px;
+}
+
+.icon-button {
+    width: 36px;
+    height: 36px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    background: white;
+
+    cursor: pointer;
+
+    color: var(--muted);
+
+    font-size: 15px;
+}
+
+.icon-button:hover {
+    background: var(--surface-soft);
+}
+
+
+/* Safety */
+
+.safety {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 24px;
+
+    background: var(--warning-soft);
+
+    border-bottom: 1px solid #f2dfb5;
+
+    color: #8a621e;
+
+    font-size: 11px;
+}
+
+
+/* Emergency */
+
+.emergency-banner {
+    display: none;
+
+    padding: 14px 22px;
+
+    background: var(--danger-soft);
+
+    border-bottom: 2px solid #e7aaaa;
+
+    color: #9d2929;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.emergency-banner.visible {
+    display: block;
+}
+
+
+/* Messages */
+
+.messages {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 30px 8% 24px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* Empty state */
+
+.empty-state {
+    margin: auto;
+
+    max-width: 520px;
+
+    text-align: center;
+}
+
+.empty-icon {
+    width: 62px;
+    height: 62px;
+
+    margin: 0 auto 16px;
+
+    border-radius: 20px;
+
+    background: var(--primary-soft);
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+}
+
+.empty-state h2 {
+    margin: 0;
+
+    font-size: 22px;
+
+    letter-spacing: -0.5px;
+}
+
+.empty-state p {
+    margin: 8px 0 24px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* Suggested prompts */
+
+.prompt-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 9px;
+
+    text-align: left;
+}
+
+.prompt {
+    padding: 13px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: 0.15s;
+}
+
+.prompt:hover {
+    border-color: #b9dcd7;
+
+    transform: translateY(-1px);
+
+    box-shadow: var(--shadow);
+}
+
+.prompt-icon {
+    font-size: 17px;
+
+    margin-bottom: 6px;
+}
+
+.prompt-title {
+    font-size: 12px;
+
+    font-weight: 650;
+}
+
+.prompt-subtitle {
+    font-size: 10px;
+
+    color: var(--muted);
+
+    margin-top: 3px;
+}
+
+
+/* Message */
+
+.message-row {
+    display: flex;
+
+    gap: 10px;
+
+    max-width: 820px;
+
+    width: 100%;
+
+    margin: 0 auto;
+}
+
+.message-row.user {
+    justify-content: flex-end;
+}
+
+.message-avatar {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 9px;
+
+    background: var(--primary-soft);
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+
+    flex-shrink: 0;
+}
+
+.message-row.user .message-avatar {
+    display: none;
+}
+
+.message-content {
+    max-width: 75%;
+}
+
+.message-bubble {
+    padding: 12px 15px;
+
+    border-radius: 15px;
+
+    font-size: 13.5px;
+
+    line-height: 1.6;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+}
+
+.message-row.assistant .message-bubble {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-top-left-radius: 4px;
+}
+
+.message-row.user .message-bubble {
+    background: var(--user);
+
+    color: white;
+
+    border-top-right-radius: 4px;
+}
+
+.message-time {
+    font-size: 9px;
+
+    color: var(--muted-light);
+
+    margin-top: 5px;
+
+    padding: 0 3px;
+}
+
+
+/* Thinking */
+
+.thinking {
+    display: flex;
+
+    gap: 4px;
+
+    padding: 5px 0;
+}
+
+.thinking span {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--primary);
+
+    animation: thinking 1.2s infinite;
+}
+
+.thinking span:nth-child(2) {
+    animation-delay: .15s;
+}
+
+.thinking span:nth-child(3) {
+    animation-delay: .3s;
+}
+
+@keyframes thinking {
+    0%, 60%, 100% {
+        opacity: .25;
+        transform: translateY(0);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translateY(-3px);
+    }
+}
+
+
+/* Composer */
+
+.composer-area {
+    padding: 12px 8% 20px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(245,247,248,0),
+            var(--bg) 15%
+        );
+}
+
+.composer {
+    max-width: 820px;
+
+    margin: auto;
+
+    background: white;
+
+    border: 1px solid var(--border-dark);
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 25px rgba(22, 35, 40, .07);
+
+    display: flex;
+
+    align-items: flex-end;
+
+    padding: 8px;
+}
+
+.composer textarea {
+    flex: 1;
+
+    border: none;
+
+    outline: none;
+
+    resize: none;
+
+    min-height: 42px;
+
+    max-height: 130px;
+
+    padding: 10px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    color: var(--text);
+}
+
+.send-button {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background: var(--primary);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    flex-shrink: 0;
+}
+
+.send-button:hover {
+    background: var(--primary-dark);
+}
+
+.send-button:disabled {
+    opacity: .4;
+
+    cursor: not-allowed;
+}
+
+.composer-hint {
+    max-width: 820px;
+
+    margin: 7px auto 0;
+
+    text-align: center;
+
+    font-size: 9px;
+
+    color: var(--muted-light);
+}
+
+
+/* --------------------------------------------------
+   PATIENT PANEL
+-------------------------------------------------- */
+
+.patient-panel {
+    background: var(--surface);
+
+    border-left: 1px solid var(--border);
+
+    overflow-y: auto;
+}
+
+
+/* Patient profile */
+
+.profile {
+    padding: 24px 20px 18px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-top {
+    display: flex;
+
+    align-items: center;
+}
+
+.profile-avatar {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 16px;
+
+    background: var(--primary);
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 750;
+
+    font-size: 17px;
+
+    margin-right: 12px;
+}
+
+.profile-name {
+    font-size: 15px;
+
+    font-weight: 750;
+}
+
+.profile-id {
+    font-size: 10px;
+
+    color: var(--muted);
+
+    margin-top: 3px;
+}
+
+
+/* Fact cards */
+
+.fact-section {
+    padding: 18px 20px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.fact-section-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+}
+
+.fact-title {
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .7px;
+
+    font-weight: 750;
+
+    color: var(--muted);
+}
+
+.add-button {
+    border: none;
+
+    background: none;
+
+    color: var(--primary);
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    font-weight: 650;
+}
+
+.fact-card {
+    border: 1px solid var(--border);
+
+    background: var(--surface-soft);
+
+    border-radius: 11px;
+
+    padding: 10px 11px;
+
+    margin-bottom: 7px;
+}
+
+.fact-card:last-child {
+    margin-bottom: 0;
+}
+
+.fact-name {
+    font-size: 12px;
+
+    font-weight: 650;
+}
+
+.fact-detail {
+    color: var(--muted);
+
+    font-size: 10px;
+
+    margin-top: 3px;
+
+    line-height: 1.4;
+}
+
+.allergy-card {
+    background: var(--danger-soft);
+
+    border-color: #f1d0d0;
+}
+
+.allergy-card .fact-name {
+    color: #a43131;
+}
+
+
+/* Local AI card */
+
+.ai-card {
+    margin: 18px 20px;
+
+    padding: 13px;
+
+    background: var(--primary-soft);
+
+    border: 1px solid #cce8e4;
+
+    border-radius: 12px;
+}
+
+.ai-card-title {
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: var(--primary-dark);
+}
+
+.ai-card-text {
+    font-size: 10px;
+
+    color: #4f7772;
+
+    margin-top: 4px;
+
+    line-height: 1.5;
+}
+
+
+/* --------------------------------------------------
+   MODAL
+-------------------------------------------------- */
+
+.modal-backdrop {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(17, 28, 32, .38);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 100;
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal {
+    width: min(430px, calc(100vw - 30px));
+
+    background: white;
+
+    border-radius: 17px;
+
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 17px 19px;
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 14px;
+
+    font-weight: 750;
+}
+
+.modal-close {
+    border: none;
+
+    background: none;
+
+    cursor: pointer;
+
+    color: var(--muted);
+
+    font-size: 17px;
+}
+
+.modal-body {
+    padding: 18px;
+}
+
+.form-group {
+    margin-bottom: 11px;
+}
+
+.form-group label {
+    display: block;
+
+    font-size: 10px;
+
+    font-weight: 650;
+
+    color: var(--muted);
+
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+}
+
+.modal-footer {
+    padding: 12px 18px;
+
+    border-top: 1px solid var(--border);
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 7px;
+}
+
+.btn {
+    padding: 9px 13px;
+
+    border-radius: 9px;
+
+    border: 1px solid var(--border);
+
+    background: white;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: var(--primary);
+
+    border-color: var(--primary);
+
+    color: white;
+}
+
+
+/* --------------------------------------------------
+   MOBILE
+-------------------------------------------------- */
+
+.mobile-menu {
+    display: none;
+}
+
+@media (max-width: 1050px) {
+
+    .app {
+        grid-template-columns:
+            220px
+            minmax(400px, 1fr);
+    }
+
+    .patient-panel {
+        display: none;
+    }
+}
+
+
+@media (max-width: 720px) {
+
+    body {
+        overflow: hidden;
+    }
+
+    .app {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+
+        z-index: 50;
+
+        top: 0;
+        bottom: 0;
+        left: -280px;
+
+        width: 270px;
+
+        transition: .2s ease;
+
+        box-shadow: 10px 0 30px rgba(0,0,0,.12);
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .mobile-menu {
+        display: flex;
+
+        width: 36px;
+        height: 36px;
+
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid var(--border);
+
+        border-radius: 9px;
+
+        background: white;
+
+        cursor: pointer;
+    }
+
+    .chat-header {
+        padding: 0 12px;
+    }
+
+    .messages {
+        padding: 22px 12px;
+    }
+
+    .composer-area {
+        padding: 8px 10px 12px;
+    }
+
+    .message-content {
+        max-width: 88%;
+    }
+
+    .prompt-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 </style>
 </head>
+
+
 <body>
 
-<div id="sidebar">
-  <h1>ToomMED</h1>
+<div class="app">
 
-  <h2>Patient</h2>
-  <select id="patient-select"></select>
-  <input id="new-patient-name" placeholder="New patient name">
-  <button id="create-patient-btn">Create Patient</button>
 
-  <div id="facts-section" style="display:none;">
-    <h2>Medications</h2>
-    <div id="medications-list" class="fact-list"></div>
-    <input id="med-name" placeholder="Name">
-    <input id="med-dosage" placeholder="Dosage (e.g. 10mg)">
-    <input id="med-frequency" placeholder="Frequency (e.g. daily)">
-    <select id="med-status">
-      <option value="active">Active</option>
-      <option value="past">Past</option>
-      <option value="discontinued">Discontinued</option>
-    </select>
-    <input id="med-prescribed-date" type="date" placeholder="Date prescribed">
-    <button id="add-med-btn" class="secondary">Add Medication</button>
+<!-- =========================================================
+     LEFT SIDEBAR
+========================================================= -->
 
-    <h2>Allergies</h2>
-    <div id="allergies-list" class="fact-list"></div>
-    <input id="allergy-substance" placeholder="Substance">
-    <input id="allergy-reaction" placeholder="Reaction">
-    <input id="allergy-severity" placeholder="Severity (mild/moderate/severe)">
-    <input id="allergy-identified-date" type="date" placeholder="Date identified">
-    <button id="add-allergy-btn" class="secondary">Add Allergy</button>
+<aside class="sidebar" id="sidebar">
 
-    <h2>Conditions</h2>
-    <div id="conditions-list" class="fact-list"></div>
-    <input id="condition-name" placeholder="Condition name">
-    <input id="condition-status" placeholder="Status (active/resolved/chronic)">
-    <input id="condition-diagnosed-date" type="date" placeholder="Date diagnosed">
-    <button id="add-condition-btn" class="secondary">Add Condition</button>
-  </div>
+    <div class="brand">
+
+        <div class="brand-icon">
+            ✚
+        </div>
+
+        <div>
+            <div class="brand-name">ToomMed</div>
+            <div class="brand-subtitle">
+                Local medical assistant
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="patient-area">
+
+        <div class="section-label">
+            Patients
+        </div>
+
+
+        <div class="search-box">
+
+            <span>⌕</span>
+
+            <input
+                id="patient-search"
+                placeholder="Search patients..."
+            >
+
+        </div>
+
+
+        <div class="new-patient">
+
+            <input
+                id="new-patient-name"
+                placeholder="Patient name"
+            >
+
+            <button
+                id="create-patient-btn"
+                class="icon-button"
+                title="Create patient"
+            >
+                +
+            </button>
+
+        </div>
+
+
+        <div
+            id="patient-list"
+            class="patient-list"
+        ></div>
+
+    </div>
+
+
+    <div class="sidebar-footer">
+
+        <div class="local-status">
+
+            <div class="status-dot"></div>
+
+            <div>
+
+                <div class="status-title">
+                    Local AI
+                </div>
+
+                <div class="status-subtitle">
+                    Ollama connected
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN CHAT
+========================================================= -->
+
+<main class="chat">
+
+
+    <header class="chat-header">
+
+        <div class="patient-header">
+
+            <button
+                class="mobile-menu"
+                id="mobile-menu"
+            >
+                ☰
+            </button>
+
+            <div
+                class="header-avatar"
+                id="header-avatar"
+            >
+                ?
+            </div>
+
+            <div>
+
+                <div
+                    class="header-name"
+                    id="header-name"
+                >
+                    Select a patient
+                </div>
+
+                <div
+                    class="header-meta"
+                    id="header-meta"
+                >
+                    Create or select a patient to begin
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                class="icon-button"
+                id="theme-button"
+                title="Toggle theme"
+            >
+                ☾
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <div class="safety">
+
+        <span>⚕</span>
+
+        <span>
+            General medical information only.
+            Not a diagnosis or emergency service.
+        </span>
+
+    </div>
+
+
+    <div
+        class="emergency-banner"
+        id="emergency-banner"
+    >
+        🚨 Possible emergency detected. Please seek immediate
+        professional medical help or contact your local emergency service.
+    </div>
+
+
+    <section
+        class="messages"
+        id="messages"
+    >
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ✚
+            </div>
+
+            <h2>
+                Your local health assistant
+            </h2>
+
+            <p>
+                Select a patient and ask ToomMed about symptoms,
+                medications, conditions, or general health information.
+            </p>
+
+
+            <div class="prompt-grid">
+
+                <div
+                    class="prompt"
+                    data-prompt="Help me understand my current medications."
+                >
+                    <div class="prompt-icon">💊</div>
+
+                    <div class="prompt-title">
+                        Review medications
+                    </div>
+
+                    <div class="prompt-subtitle">
+                        Understand medicines and possible questions
+                    </div>
+                </div>
+
+
+                <div
+                    class="prompt"
+                    data-prompt="Help me understand my recorded medical conditions."
+                >
+                    <div class="prompt-icon">❤️</div>
+
+                    <div class="prompt-title">
+                        Understand a condition
+                    </div>
+
+                    <div class="prompt-subtitle">
+                        Get general educational information
+                    </div>
+                </div>
+
+
+                <div
+                    class="prompt"
+                    data-prompt="What questions should I ask my doctor about my health?"
+                >
+                    <div class="prompt-icon">🩺</div>
+
+                    <div class="prompt-title">
+                        Prepare for a doctor visit
+                    </div>
+
+                    <div class="prompt-subtitle">
+                        Create useful questions to discuss
+                    </div>
+                </div>
+
+
+                <div
+                    class="prompt"
+                    data-prompt="Explain my medical information in simple language."
+                >
+                    <div class="prompt-icon">💬</div>
+
+                    <div class="prompt-title">
+                        Explain simply
+                    </div>
+
+                    <div class="prompt-subtitle">
+                        Make medical information easier to understand
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <div class="composer-area">
+
+        <div class="composer">
+
+            <textarea
+                id="msg-input"
+                placeholder="Ask ToomMed anything..."
+                disabled
+                rows="1"
+            ></textarea>
+
+            <button
+                class="send-button"
+                id="send-btn"
+                disabled
+            >
+                ↑
+            </button>
+
+        </div>
+
+
+        <div class="composer-hint">
+
+            ToomMed can make mistakes.
+            Always consult a qualified healthcare professional.
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =========================================================
+     RIGHT PATIENT PANEL
+========================================================= -->
+
+<aside class="patient-panel">
+
+
+    <div class="profile">
+
+        <div class="profile-top">
+
+            <div
+                class="profile-avatar"
+                id="profile-avatar"
+            >
+                ?
+            </div>
+
+            <div>
+
+                <div
+                    class="profile-name"
+                    id="profile-name"
+                >
+                    No patient
+                </div>
+
+                <div
+                    class="profile-id"
+                    id="profile-id"
+                >
+                    Select a patient
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Allergies -->
+
+    <section class="fact-section">
+
+        <div class="fact-section-header">
+
+            <div class="fact-title">
+                🟥 Allergies
+            </div>
+
+            <button
+                class="add-button"
+                data-fact="allergy"
+            >
+                + Add
+            </button>
+
+        </div>
+
+        <div id="allergies-list"></div>
+
+    </section>
+
+
+    <!-- Medications -->
+
+    <section class="fact-section">
+
+        <div class="fact-section-header">
+
+            <div class="fact-title">
+                💊 Medications
+            </div>
+
+            <button
+                class="add-button"
+                data-fact="medication"
+            >
+                + Add
+            </button>
+
+        </div>
+
+        <div id="medications-list"></div>
+
+    </section>
+
+
+    <!-- Conditions -->
+
+    <section class="fact-section">
+
+        <div class="fact-section-header">
+
+            <div class="fact-title">
+                ❤️ Conditions
+            </div>
+
+            <button
+                class="add-button"
+                data-fact="condition"
+            >
+                + Add
+            </button>
+
+        </div>
+
+        <div id="conditions-list"></div>
+
+    </section>
+
+
+    <div class="ai-card">
+
+        <div class="ai-card-title">
+            🔒 Private local AI
+        </div>
+
+        <div class="ai-card-text">
+            Your patient context and conversations are processed
+            locally through Ollama on this machine.
+        </div>
+
+    </div>
+
+</aside>
+
 </div>
 
-<div id="main">
-  <div id="banner">⚠️ General medical information only — not a diagnosis. In an emergency, call local emergency services immediately.</div>
-  <div id="chat-header">Select or create a patient to start</div>
-  <div id="messages"><div id="empty-state">No patient selected</div></div>
-  <div class="disclaimer">Consult a licensed healthcare professional for advice specific to your situation.</div>
-  <div id="composer">
-    <textarea id="msg-input" placeholder="Type a message..." disabled></textarea>
-    <button id="send-btn" disabled>Send</button>
-  </div>
+
+
+<!-- =========================================================
+     FACT MODAL
+========================================================= -->
+
+<div
+    class="modal-backdrop"
+    id="modal-backdrop"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div
+                class="modal-title"
+                id="modal-title"
+            >
+                Add information
+            </div>
+
+            <button
+                class="modal-close"
+                id="modal-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="modal-body"
+            id="modal-body"
+        ></div>
+
+
+        <div class="modal-footer">
+
+            <button
+                class="btn"
+                id="modal-cancel"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="btn btn-primary"
+                id="modal-save"
+            >
+                Save
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
+
+
 
 <script>
-const API = "";  // same origin
+
+/* =========================================================
+   STATE
+========================================================= */
+
+const API = "";
+
 let currentPatientId = null;
+let patients = [];
 
-const patientSelect = document.getElementById("patient-select");
-const newPatientName = document.getElementById("new-patient-name");
-const createPatientBtn = document.getElementById("create-patient-btn");
-const factsSection = document.getElementById("facts-section");
-const messagesEl = document.getElementById("messages");
-const chatHeader = document.getElementById("chat-header");
-const msgInput = document.getElementById("msg-input");
-const sendBtn = document.getElementById("send-btn");
+let currentFactType = null;
 
-async function api(path, opts) {
-  const res = await fetch(API + path, opts);
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`${res.status}: ${body}`);
-  }
-  return res;
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const patientList =
+    document.getElementById("patient-list");
+
+const patientSearch =
+    document.getElementById("patient-search");
+
+const newPatientName =
+    document.getElementById("new-patient-name");
+
+const createPatientBtn =
+    document.getElementById("create-patient-btn");
+
+const messages =
+    document.getElementById("messages");
+
+const msgInput =
+    document.getElementById("msg-input");
+
+const sendBtn =
+    document.getElementById("send-btn");
+
+const headerName =
+    document.getElementById("header-name");
+
+const headerMeta =
+    document.getElementById("header-meta");
+
+const headerAvatar =
+    document.getElementById("header-avatar");
+
+const profileName =
+    document.getElementById("profile-name");
+
+const profileId =
+    document.getElementById("profile-id");
+
+const profileAvatar =
+    document.getElementById("profile-avatar");
+
+const emergencyBanner =
+    document.getElementById("emergency-banner");
+
+const modalBackdrop =
+    document.getElementById("modal-backdrop");
+
+const modalTitle =
+    document.getElementById("modal-title");
+
+const modalBody =
+    document.getElementById("modal-body");
+
+
+/* =========================================================
+   API
+========================================================= */
+
+async function api(path, options = {}) {
+
+    const response =
+        await fetch(API + path, options);
+
+    if (!response.ok) {
+
+        const body =
+            await response.text();
+
+        throw new Error(
+            `${response.status}: ${body}`
+        );
+    }
+
+    return response;
+
 }
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
 
 async function loadPatients() {
-  const res = await api("/patients");
-  const patients = await res.json();
-  patientSelect.innerHTML = '<option value="">-- select patient --</option>' +
-    patients.map(p => `<option value="${p.id}">${p.name} (#${p.id})</option>`).join("");
-  if (currentPatientId) patientSelect.value = currentPatientId;
+
+    const response =
+        await api("/patients");
+
+    patients =
+        await response.json();
+
+    renderPatients();
 }
 
-createPatientBtn.onclick = async () => {
-  const name = newPatientName.value.trim();
-  if (!name) return;
-  const res = await api("/patients", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({name})
-  });
-  const patient = await res.json();
-  newPatientName.value = "";
-  await loadPatients();
-  patientSelect.value = patient.id;
-  selectPatient(patient.id);
-};
 
-patientSelect.onchange = () => {
-  if (patientSelect.value) selectPatient(parseInt(patientSelect.value));
-};
+function renderPatients() {
 
-async function selectPatient(id) {
-  currentPatientId = id;
-  factsSection.style.display = "block";
-  msgInput.disabled = false;
-  sendBtn.disabled = false;
-  await Promise.all([loadFacts(), loadHistory()]);
-  const summaryRes = await api(`/patients/${id}`);
-  const patient = await summaryRes.json();
-  chatHeader.textContent = `Chatting as: ${patient.name}`;
-}
+    const search =
+        patientSearch.value
+            .trim()
+            .toLowerCase();
 
-async function loadFacts() {
-  const res = await api(`/patients/${currentPatientId}/summary`);
-  const summary = await res.json();
+    const filtered =
+        patients.filter(patient =>
+            patient.name
+                .toLowerCase()
+                .includes(search)
+        );
 
-  document.getElementById("medications-list").innerHTML = summary.medications.map(m => {
-    const when = m.prescribed_date
-      ? `Prescribed ${m.prescribed_date}`
-      : `Added ${new Date(m.created_at).toLocaleDateString()}`;
-    const statusBadge = m.status !== "active" ? ` · ${m.status.toUpperCase()}` : "";
-    return `<div class="fact-item">${m.name}<small>${[m.dosage, m.frequency].filter(Boolean).join(" · ")}</small><small>${when}${statusBadge}</small></div>`;
-  }).join("") || '<div class="fact-item"><small>None on file</small></div>';
 
-  document.getElementById("allergies-list").innerHTML = summary.allergies.map(a => {
-    const when = a.identified_date ? `Identified ${a.identified_date}` : `Added ${new Date(a.created_at).toLocaleDateString()}`;
-    return `<div class="fact-item">${a.substance}<small>${[a.reaction, a.severity].filter(Boolean).join(" · ")}</small><small>${when}</small></div>`;
-  }).join("") || '<div class="fact-item"><small>None on file</small></div>';
+    patientList.innerHTML = "";
 
-  document.getElementById("conditions-list").innerHTML = summary.conditions.map(c => {
-    const when = c.diagnosed_date ? `Diagnosed ${c.diagnosed_date}` : `Added ${new Date(c.created_at).toLocaleDateString()}`;
-    return `<div class="fact-item">${c.name}<small>${c.status || ""}</small><small>${when}</small></div>`;
-  }).join("") || '<div class="fact-item"><small>None on file</small></div>';
-}
 
-document.getElementById("add-med-btn").onclick = async () => {
-  const name = document.getElementById("med-name").value.trim();
-  if (!name || !currentPatientId) return;
-  await api(`/patients/${currentPatientId}/medications`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      name,
-      dosage: document.getElementById("med-dosage").value.trim() || null,
-      frequency: document.getElementById("med-frequency").value.trim() || null,
-      status: document.getElementById("med-status").value,
-      prescribed_date: document.getElementById("med-prescribed-date").value || null
-    })
-  });
-  document.getElementById("med-name").value = "";
-  document.getElementById("med-dosage").value = "";
-  document.getElementById("med-frequency").value = "";
-  document.getElementById("med-status").value = "active";
-  document.getElementById("med-prescribed-date").value = "";
-  loadFacts();
-};
+    if (!filtered.length) {
 
-document.getElementById("add-allergy-btn").onclick = async () => {
-  const substance = document.getElementById("allergy-substance").value.trim();
-  if (!substance || !currentPatientId) return;
-  await api(`/patients/${currentPatientId}/allergies`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      substance,
-      reaction: document.getElementById("allergy-reaction").value.trim() || null,
-      severity: document.getElementById("allergy-severity").value.trim() || null,
-      identified_date: document.getElementById("allergy-identified-date").value || null
-    })
-  });
-  document.getElementById("allergy-substance").value = "";
-  document.getElementById("allergy-reaction").value = "";
-  document.getElementById("allergy-severity").value = "";
-  document.getElementById("allergy-identified-date").value = "";
-  loadFacts();
-};
+        patientList.innerHTML = `
+            <div style="
+                padding:20px 8px;
+                text-align:center;
+                color:var(--muted);
+                font-size:11px;
+            ">
+                No patients found
+            </div>
+        `;
 
-document.getElementById("add-condition-btn").onclick = async () => {
-  const name = document.getElementById("condition-name").value.trim();
-  if (!name || !currentPatientId) return;
-  await api(`/patients/${currentPatientId}/conditions`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      name,
-      status: document.getElementById("condition-status").value.trim() || null,
-      diagnosed_date: document.getElementById("condition-diagnosed-date").value || null
-    })
-  });
-  document.getElementById("condition-name").value = "";
-  document.getElementById("condition-status").value = "";
-  document.getElementById("condition-diagnosed-date").value = "";
-  loadFacts();
-};
+        return;
+    }
 
-function renderMessage(role, content) {
-  const div = document.createElement("div");
-  div.className = "msg " + role;
-  if (content.includes("emergency")) div.classList.add("emergency");
-  div.textContent = content;
-  messagesEl.appendChild(div);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-  return div;
-}
 
-function renderThinkingBubble() {
-  const div = document.createElement("div");
-  div.className = "msg assistant";
-  div.innerHTML = '<span class="spinner"></span><span class="thinking-text">Thinking…</span>';
-  messagesEl.appendChild(div);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-  return div;
-}
+    filtered.forEach(patient => {
 
-async function loadHistory() {
-  messagesEl.innerHTML = "";
-  const res = await api(`/patients/${currentPatientId}/history`);
-  const history = await res.json();
-  if (history.length === 0) {
-    messagesEl.innerHTML = '<div id="empty-state">No messages yet — say hello.</div>';
-    return;
-  }
-  history.forEach(m => renderMessage(m.role, m.content));
-}
+        const card =
+            document.createElement("button");
 
-async function sendMessage() {
-  const text = msgInput.value.trim();
-  if (!text || !currentPatientId) return;
-  msgInput.value = "";
-  sendBtn.disabled = true;
+        card.className =
+            "patient-card" +
+            (patient.id === currentPatientId
+                ? " active"
+                : "");
 
-  const emptyState = document.getElementById("empty-state");
-  if (emptyState) emptyState.remove();
+        const initials =
+            patient.name
+                .split(/\s+/)
+                .map(x => x[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase();
 
-  renderMessage("user", text);
-  const assistantDiv = renderThinkingBubble();
 
-  try {
-    const res = await api(`/patients/${currentPatientId}/chat`, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({message: text, stream: true})
+        card.innerHTML = `
+
+            <div class="patient-avatar">
+                ${escapeHtml(initials)}
+            </div>
+
+            <div class="patient-info">
+
+                <div class="patient-name">
+                    ${escapeHtml(patient.name)}
+                </div>
+
+                <div class="patient-meta">
+                    Patient #${patient.id}
+                </div>
+
+            </div>
+        `;
+
+
+        card.onclick =
+            () => selectPatient(patient.id);
+
+
+        patientList.appendChild(card);
+
     });
 
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let full = "";
-    let firstChunk = true;
-    while (true) {
-      const {done, value} = await reader.read();
-      if (done) break;
-      if (firstChunk) {
-        assistantDiv.textContent = "";  // clear "…thinking" only once real content arrives
-        firstChunk = false;
-      }
-      full += decoder.decode(value, {stream: true});
-      assistantDiv.textContent = full;
-      if (full.toLowerCase().includes("emergency")) assistantDiv.classList.add("emergency");
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-  } catch (err) {
-    assistantDiv.textContent = "Error: " + err.message;
-  } finally {
-    sendBtn.disabled = false;
-    loadFacts(); // in case context changed patient view elsewhere
-  }
 }
 
-sendBtn.onclick = sendMessage;
-msgInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-});
+
+/* =========================================================
+   CREATE PATIENT
+========================================================= */
+
+createPatientBtn.onclick =
+    createPatient;
+
+
+newPatientName.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+            createPatient();
+        }
+
+    }
+);
+
+
+async function createPatient() {
+
+    const name =
+        newPatientName.value.trim();
+
+    if (!name) return;
+
+
+    try {
+
+        const response =
+            await api("/patients", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    name
+                })
+
+            });
+
+
+        const patient =
+            await response.json();
+
+        newPatientName.value = "";
+
+        await loadPatients();
+
+        await selectPatient(patient.id);
+
+    } catch (error) {
+
+        alert(error.message);
+
+    }
+
+}
+
+
+/* =========================================================
+   SELECT PATIENT
+========================================================= */
+
+async function selectPatient(id) {
+
+    currentPatientId = id;
+
+    renderPatients();
+
+
+    msgInput.disabled = false;
+    sendBtn.disabled = false;
+
+
+    const patient =
+        patients.find(
+            p => p.id === id
+        );
+
+
+    if (patient) {
+
+        const initials =
+            patient.name
+                .split(/\s+/)
+                .map(x => x[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase();
+
+
+        headerName.textContent =
+            patient.name;
+
+        headerMeta.textContent =
+            `Patient #${patient.id} · Local conversation`;
+
+
+        headerAvatar.textContent =
+            initials;
+
+        profileAvatar.textContent =
+            initials;
+
+        profileName.textContent =
+            patient.name;
+
+        profileId.textContent =
+            `Patient #${patient.id}`;
+
+    }
+
+
+    await Promise.all([
+        loadFacts(),
+        loadHistory()
+    ]);
+
+
+    document
+        .getElementById("sidebar")
+        .classList.remove("open");
+}
+
+
+/* =========================================================
+   FACTS
+========================================================= */
+
+async function loadFacts() {
+
+    if (!currentPatientId)
+        return;
+
+
+    const response =
+        await api(
+            `/patients/${currentPatientId}/summary`
+        );
+
+    const summary =
+        await response.json();
+
+
+    renderMedications(
+        summary.medications
+    );
+
+    renderAllergies(
+        summary.allergies
+    );
+
+    renderConditions(
+        summary.conditions
+    );
+
+}
+
+
+function renderMedications(items) {
+
+    const container =
+        document.getElementById(
+            "medications-list"
+        );
+
+
+    if (!items.length) {
+
+        container.innerHTML = emptyFact(
+            "No medications recorded"
+        );
+
+        return;
+    }
+
+
+    container.innerHTML =
+        items.map(item => `
+
+            <div class="fact-card">
+
+                <div class="fact-name">
+                    ${escapeHtml(item.name)}
+                </div>
+
+                <div class="fact-detail">
+                    ${escapeHtml(
+                        [
+                            item.dosage,
+                            item.frequency
+                        ]
+                        .filter(Boolean)
+                        .join(" · ")
+                    )}
+                </div>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+function renderAllergies(items) {
+
+    const container =
+        document.getElementById(
+            "allergies-list"
+        );
+
+
+    if (!items.length) {
+
+        container.innerHTML =
+            emptyFact(
+                "No allergies recorded"
+            );
+
+        return;
+    }
+
+
+    container.innerHTML =
+        items.map(item => `
+
+            <div class="fact-card allergy-card">
+
+                <div class="fact-name">
+                    ${escapeHtml(item.substance)}
+                </div>
+
+                <div class="fact-detail">
+                    ${escapeHtml(
+                        [
+                            item.reaction,
+                            item.severity
+                        ]
+                        .filter(Boolean)
+                        .join(" · ")
+                    )}
+                </div>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+function renderConditions(items) {
+
+    const container =
+        document.getElementById(
+            "conditions-list"
+        );
+
+
+    if (!items.length) {
+
+        container.innerHTML =
+            emptyFact(
+                "No conditions recorded"
+            );
+
+        return;
+    }
+
+
+    container.innerHTML =
+        items.map(item => `
+
+            <div class="fact-card">
+
+                <div class="fact-name">
+                    ${escapeHtml(item.name)}
+                </div>
+
+                <div class="fact-detail">
+                    ${escapeHtml(
+                        item.status || ""
+                    )}
+                </div>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+function emptyFact(text) {
+
+    return `
+
+        <div style="
+            padding:10px;
+            color:var(--muted-light);
+            font-size:10px;
+        ">
+            ${text}
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+document
+    .querySelectorAll(".add-button")
+    .forEach(button => {
+
+        button.onclick =
+            () => openFactModal(
+                button.dataset.fact
+            );
+
+    });
+
+
+function openFactModal(type) {
+
+    if (!currentPatientId) {
+
+        alert("Select a patient first.");
+
+        return;
+    }
+
+
+    currentFactType = type;
+
+
+    const titles = {
+
+        medication:
+            "Add medication",
+
+        allergy:
+            "Add allergy",
+
+        condition:
+            "Add medical condition"
+
+    };
+
+
+    modalTitle.textContent =
+        titles[type];
+
+
+    if (type === "medication") {
+
+        modalBody.innerHTML = `
+
+            <div class="form-group">
+                <label>Medication name</label>
+                <input id="fact-name">
+            </div>
+
+            <div class="form-group">
+                <label>Dosage</label>
+                <input id="fact-dosage"
+                       placeholder="e.g. 10mg">
+            </div>
+
+            <div class="form-group">
+                <label>Frequency</label>
+                <input id="fact-frequency"
+                       placeholder="e.g. once daily">
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <select id="fact-status">
+                    <option value="active">
+                        Active
+                    </option>
+                    <option value="past">
+                        Past
+                    </option>
+                    <option value="discontinued">
+                        Discontinued
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Date prescribed</label>
+                <input
+                    id="fact-date"
+                    type="date"
+                >
+            </div>
+        `;
+
+    }
+
+
+    if (type === "allergy") {
+
+        modalBody.innerHTML = `
+
+            <div class="form-group">
+                <label>Substance</label>
+                <input id="fact-substance">
+            </div>
+
+            <div class="form-group">
+                <label>Reaction</label>
+                <input id="fact-reaction">
+            </div>
+
+            <div class="form-group">
+                <label>Severity</label>
+                <select id="fact-severity">
+                    <option value="">
+                        Select severity
+                    </option>
+                    <option value="mild">
+                        Mild
+                    </option>
+                    <option value="moderate">
+                        Moderate
+                    </option>
+                    <option value="severe">
+                        Severe
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Date identified</label>
+                <input
+                    id="fact-date"
+                    type="date"
+                >
+            </div>
+
+        `;
+
+    }
+
+
+    if (type === "condition") {
+
+        modalBody.innerHTML = `
+
+            <div class="form-group">
+                <label>Condition</label>
+                <input id="fact-condition">
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <input
+                    id="fact-status"
+                    placeholder="active / chronic / resolved"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Date diagnosed</label>
+                <input
+                    id="fact-date"
+                    type="date"
+                >
+            </div>
+
+        `;
+
+    }
+
+
+    modalBackdrop.classList.add("open");
+
+}
+
+
+function closeModal() {
+
+    modalBackdrop.classList.remove("open");
+
+    currentFactType = null;
+
+}
+
+
+document
+    .getElementById("modal-close")
+    .onclick = closeModal;
+
+document
+    .getElementById("modal-cancel")
+    .onclick = closeModal;
+
+
+modalBackdrop.addEventListener(
+    "click",
+    event => {
+
+        if (event.target === modalBackdrop) {
+            closeModal();
+        }
+
+    }
+);
+
+
+/* Save fact */
+
+document
+    .getElementById("modal-save")
+    .onclick = saveFact;
+
+
+async function saveFact() {
+
+    if (!currentFactType ||
+        !currentPatientId)
+        return;
+
+
+    try {
+
+        let path;
+        let body;
+
+
+        if (currentFactType === "medication") {
+
+            const name =
+                document
+                    .getElementById("fact-name")
+                    .value
+                    .trim();
+
+
+            if (!name)
+                return;
+
+
+            path =
+                `/patients/${currentPatientId}/medications`;
+
+
+            body = {
+
+                name,
+
+                dosage:
+                    document
+                        .getElementById("fact-dosage")
+                        .value
+                        .trim() || null,
+
+                frequency:
+                    document
+                        .getElementById("fact-frequency")
+                        .value
+                        .trim() || null,
+
+                status:
+                    document
+                        .getElementById("fact-status")
+                        .value,
+
+                prescribed_date:
+                    document
+                        .getElementById("fact-date")
+                        .value || null
+
+            };
+
+        }
+
+
+        if (currentFactType === "allergy") {
+
+            const substance =
+                document
+                    .getElementById("fact-substance")
+                    .value
+                    .trim();
+
+
+            if (!substance)
+                return;
+
+
+            path =
+                `/patients/${currentPatientId}/allergies`;
+
+
+            body = {
+
+                substance,
+
+                reaction:
+                    document
+                        .getElementById("fact-reaction")
+                        .value
+                        .trim() || null,
+
+                severity:
+                    document
+                        .getElementById("fact-severity")
+                        .value || null,
+
+                identified_date:
+                    document
+                        .getElementById("fact-date")
+                        .value || null
+
+            };
+
+        }
+
+
+        if (currentFactType === "condition") {
+
+            const name =
+                document
+                    .getElementById("fact-condition")
+                    .value
+                    .trim();
+
+
+            if (!name)
+                return;
+
+
+            path =
+                `/patients/${currentPatientId}/conditions`;
+
+
+            body = {
+
+                name,
+
+                status:
+                    document
+                        .getElementById("fact-status")
+                        .value
+                        .trim() || null,
+
+                diagnosed_date:
+                    document
+                        .getElementById("fact-date")
+                        .value || null
+
+            };
+
+        }
+
+
+        await api(path, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body:
+                JSON.stringify(body)
+
+        });
+
+
+        closeModal();
+
+        await loadFacts();
+
+
+    } catch (error) {
+
+        alert(error.message);
+
+    }
+
+}
+
+
+/* =========================================================
+   CHAT HISTORY
+========================================================= */
+
+async function loadHistory() {
+
+    messages.innerHTML = "";
+
+
+    if (!currentPatientId)
+        return;
+
+
+    const response =
+        await api(
+            `/patients/${currentPatientId}/history`
+        );
+
+
+    const history =
+        await response.json();
+
+
+    if (!history.length) {
+
+        renderEmptyState();
+
+        return;
+    }
+
+
+    history.forEach(message => {
+
+        renderMessage(
+            message.role,
+            message.content
+        );
+
+    });
+
+
+    scrollMessages();
+
+}
+
+
+function renderEmptyState() {
+
+    messages.innerHTML = `
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ✚
+            </div>
+
+            <h2>
+                How can I help?
+            </h2>
+
+            <p>
+                Ask a question about symptoms, medications,
+                conditions, or general health information.
+            </p>
+
+
+            <div class="prompt-grid">
+
+                <div
+                    class="prompt"
+                    data-prompt="Help me understand my current medications."
+                >
+                    <div class="prompt-icon">💊</div>
+                    <div class="prompt-title">
+                        Review medications
+                    </div>
+                    <div class="prompt-subtitle">
+                        Understand your medicines
+                    </div>
+                </div>
+
+
+                <div
+                    class="prompt"
+                    data-prompt="Help me understand my recorded medical conditions."
+                >
+                    <div class="prompt-icon">❤️</div>
+                    <div class="prompt-title">
+                        Understand a condition
+                    </div>
+                    <div class="prompt-subtitle">
+                        Learn the basics
+                    </div>
+                </div>
+
+
+                <div
+                    class="prompt"
+                    data-prompt="What questions should I ask my doctor about my health?"
+                >
+                    <div class="prompt-icon">🩺</div>
+                    <div class="prompt-title">
+                        Prepare for a doctor visit
+                    </div>
+                    <div class="prompt-subtitle">
+                        Make a useful question list
+                    </div>
+                </div>
+
+
+                <div
+                    class="prompt"
+                    data-prompt="Explain my medical information in simple language."
+                >
+                    <div class="prompt-icon">💬</div>
+                    <div class="prompt-title">
+                        Explain simply
+                    </div>
+                    <div class="prompt-subtitle">
+                        Reduce medical jargon
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    attachPromptHandlers();
+
+}
+
+
+/* =========================================================
+   MESSAGE RENDERING
+========================================================= */
+
+function renderMessage(role, content) {
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        `message-row ${role}`;
+
+
+    const initials =
+        role === "assistant"
+            ? "✚"
+            : "";
+
+
+    row.innerHTML = `
+
+        <div class="message-avatar">
+            ${initials}
+        </div>
+
+        <div class="message-content">
+
+            <div class="message-bubble"></div>
+
+            <div class="message-time">
+                ${role === "assistant"
+                    ? "ToomMed"
+                    : "You"}
+            </div>
+
+        </div>
+
+    `;
+
+
+    const bubble =
+        row.querySelector(
+            ".message-bubble"
+        );
+
+
+    bubble.textContent = content;
+
+
+    if (
+        content
+            .toLowerCase()
+            .includes("emergency")
+    ) {
+
+        emergencyBanner
+            .classList
+            .add("visible");
+
+    }
+
+
+    messages.appendChild(row);
+
+
+    scrollMessages();
+
+
+    return bubble;
+
+}
+
+
+function renderThinking() {
+
+    const row =
+        document.createElement("div");
+
+
+    row.className =
+        "message-row assistant";
+
+
+    row.innerHTML = `
+
+        <div class="message-avatar">
+            ✚
+        </div>
+
+        <div class="message-content">
+
+            <div class="message-bubble">
+
+                <div class="thinking">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    messages.appendChild(row);
+
+    scrollMessages();
+
+    return row;
+
+}
+
+
+/* =========================================================
+   SEND MESSAGE
+========================================================= */
+
+async function sendMessage() {
+
+    const text =
+        msgInput.value.trim();
+
+
+    if (
+        !text ||
+        !currentPatientId
+    ) return;
+
+
+    msgInput.value = "";
+
+    autoResize();
+
+    sendBtn.disabled = true;
+
+
+    const empty =
+        document.querySelector(
+            ".empty-state"
+        );
+
+    if (empty)
+        empty.remove();
+
+
+    renderMessage(
+        "user",
+        text
+    );
+
+
+    const thinking =
+        renderThinking();
+
+
+    try {
+
+        const response =
+            await api(
+                `/patients/${currentPatientId}/chat`,
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        message: text,
+
+                        stream: true
+
+                    })
+
+                }
+            );
+
+
+        const reader =
+            response.body.getReader();
+
+        const decoder =
+            new TextDecoder();
+
+
+        let full = "";
+
+        let firstChunk = true;
+
+
+        while (true) {
+
+            const {
+                done,
+                value
+            } =
+                await reader.read();
+
+
+            if (done)
+                break;
+
+
+            if (firstChunk) {
+
+                thinking.remove();
+
+                var assistantBubble =
+                    renderMessage(
+                        "assistant",
+                        ""
+                    );
+
+                firstChunk = false;
+
+            }
+
+
+            full +=
+                decoder.decode(
+                    value,
+                    {stream: true}
+                );
+
+
+            assistantBubble.textContent =
+                full;
+
+
+            if (
+                full
+                    .toLowerCase()
+                    .includes("emergency")
+            ) {
+
+                emergencyBanner
+                    .classList
+                    .add("visible");
+
+            }
+
+
+            scrollMessages();
+
+        }
+
+
+    } catch (error) {
+
+        thinking.remove();
+
+        renderMessage(
+            "assistant",
+            "Sorry, something went wrong: " +
+            error.message
+        );
+
+    } finally {
+
+        sendBtn.disabled = false;
+
+        loadFacts();
+
+    }
+
+}
+
+
+sendBtn.onclick =
+    sendMessage;
+
+
+msgInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+msgInput.addEventListener(
+    "input",
+    autoResize
+);
+
+
+function autoResize() {
+
+    msgInput.style.height =
+        "auto";
+
+    msgInput.style.height =
+        Math.min(
+            msgInput.scrollHeight,
+            130
+        ) + "px";
+
+}
+
+
+/* =========================================================
+   PROMPTS
+========================================================= */
+
+function attachPromptHandlers() {
+
+    document
+        .querySelectorAll(
+            ".prompt"
+        )
+        .forEach(prompt => {
+
+            prompt.onclick =
+                () => {
+
+                    if (!currentPatientId)
+                        return;
+
+
+                    msgInput.value =
+                        prompt.dataset.prompt;
+
+
+                    autoResize();
+
+                    msgInput.focus();
+
+                };
+
+        });
+
+}
+
+
+attachPromptHandlers();
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+document
+    .getElementById("mobile-menu")
+    .onclick = () => {
+
+        document
+            .getElementById("sidebar")
+            .classList
+            .toggle("open");
+
+    };
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+document
+    .getElementById("theme-button")
+    .onclick = () => {
+
+        document.body.classList.toggle(
+            "dark"
+        );
+
+    };
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+patientSearch.addEventListener(
+    "input",
+    renderPatients
+);
+
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+function scrollMessages() {
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
 
 loadPatients();
+
 </script>
+
 </body>
 </html>
