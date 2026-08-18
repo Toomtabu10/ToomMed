@@ -27,7 +27,7 @@ medical_client: Optional[MedicalOllamaClient] = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global medical_client
-    Base.metadata.create_all(bind=engine)  # creates patients.db tables on first run
+    Base.metadata.create_all(bind=engine)
     try:
         medical_client = MedicalOllamaClient()
     except ModelNotAvailableError as e:
@@ -52,9 +52,9 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def index():
-    """Serve the UI and install the browser-side chat reliability fix."""
+    """Serve the UI with a cache-busted chat enhancement script."""
     html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
-    fix = '<script src="/static/chat-fix.js"></script>'
+    fix = '<script src="/static/chat-fix.js?v=20260818"></script>'
     if fix not in html:
         html = html.replace("</body>", f"{fix}\n</body>")
     return HTMLResponse(content=html)
@@ -71,8 +71,6 @@ def get_patient_or_404(patient_id: int, db: Session) -> models.Patient:
 def health():
     return {"status": "ok", "model": config.MODEL_NAME, "ollama_host": config.OLLAMA_HOST}
 
-
-# ---------- Patients ----------
 
 @app.post("/patients", response_model=schemas.PatientOut)
 def create_patient(patient: schemas.PatientCreate, db: Session = Depends(get_db)):
@@ -105,8 +103,6 @@ def patient_summary(patient_id: int, db: Session = Depends(get_db)):
         message_count=message_count,
     )
 
-
-# ---------- Structured facts (explicit CRUD only - never auto-written) ----------
 
 @app.post("/patients/{patient_id}/medications", response_model=schemas.MedicationOut)
 def add_medication(patient_id: int, med: schemas.MedicationCreate, db: Session = Depends(get_db)):
@@ -168,8 +164,6 @@ def delete_condition(condition_id: int, db: Session = Depends(get_db)):
     return {"deleted": condition_id}
 
 
-# ---------- Chat (reads structured facts + history, writes only to the message log) ----------
-
 @app.get("/patients/{patient_id}/history", response_model=list[schemas.MessageOut])
 def chat_history(patient_id: int, db: Session = Depends(get_db)):
     get_patient_or_404(patient_id, db)
@@ -190,8 +184,6 @@ def chat(patient_id: int, req: schemas.ChatRequest, db: Session = Depends(get_db
     patient_context = memory.build_patient_context(patient)
     history = memory.get_recent_history(db, patient_id)
 
-    # Log the user's message immediately, before generating a reply, so it
-    # isn't lost if the model call fails.
     memory.save_message(db, patient_id, "user", req.message)
 
     if req.stream:
