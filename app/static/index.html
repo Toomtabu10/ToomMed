@@ -1,47 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ToomMed — Local Medical Assistant</title>
+<title>ToomMED — Local Medical Assistant</title>
 
 <style>
 
 :root {
-    --bg: #f5f7f8;
+    --bg: #f4f7f7;
     --surface: #ffffff;
-    --surface-soft: #f8fafb;
+    --surface-soft: #f8faf9;
 
-    --border: #e5e9ec;
-    --border-dark: #d7dde1;
+    --border: #e1e8e7;
+    --border-hover: #cbdad8;
 
-    --text: #172126;
-    --muted: #718087;
-    --muted-light: #9aa5aa;
+    --text: #172323;
+    --muted: #728080;
+    --muted-light: #9aa7a6;
 
     --primary: #147d73;
-    --primary-dark: #0f665e;
-    --primary-soft: #e7f5f2;
+    --primary-dark: #0d655d;
+    --primary-soft: #e5f4f1;
 
     --danger: #c43d3d;
     --danger-soft: #fff0f0;
 
-    --warning: #b7791f;
+    --warning: #9a6818;
     --warning-soft: #fff8e8;
 
     --user: #147d73;
-    --assistant: #f1f5f5;
+    --assistant: #ffffff;
 
-    --shadow: 0 8px 30px rgba(24, 39, 45, 0.06);
+    --shadow:
+        0 8px 30px rgba(20, 45, 45, 0.07);
 
     --radius: 14px;
 }
 
 
-/* --------------------------------------------------
+/* =========================================================
    RESET
--------------------------------------------------- */
+========================================================= */
 
 * {
     box-sizing: border-box;
@@ -49,19 +50,18 @@
 
 html,
 body {
-    margin: 0;
     width: 100%;
     height: 100%;
+    margin: 0;
 }
 
 body {
     font-family:
-        Inter,
-        ui-sans-serif,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         Roboto,
+        Arial,
         sans-serif;
 
     background: var(--bg);
@@ -70,26 +70,33 @@ body {
     overflow: hidden;
 }
 
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
 
-/* --------------------------------------------------
-   APP
--------------------------------------------------- */
+
+/* =========================================================
+   APP LAYOUT
+========================================================= */
 
 .app {
+    height: 100vh;
+
     display: grid;
 
     grid-template-columns:
         250px
         minmax(420px, 1fr)
         310px;
-
-    height: 100vh;
 }
 
 
-/* --------------------------------------------------
-   SIDEBAR
--------------------------------------------------- */
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
 
 .sidebar {
     background: var(--surface);
@@ -106,19 +113,19 @@ body {
 /* Brand */
 
 .brand {
-    height: 72px;
+    height: 70px;
+
+    padding: 0 18px;
 
     display: flex;
     align-items: center;
-
-    padding: 0 20px;
 
     border-bottom: 1px solid var(--border);
 }
 
 .brand-icon {
-    width: 36px;
-    height: 36px;
+    width: 37px;
+    height: 37px;
 
     border-radius: 11px;
 
@@ -137,13 +144,17 @@ body {
 
 .brand-name {
     font-size: 17px;
+
     font-weight: 750;
+
     letter-spacing: -0.3px;
 }
 
 .brand-subtitle {
     font-size: 10px;
+
     color: var(--muted);
+
     margin-top: 2px;
 }
 
@@ -159,50 +170,32 @@ body {
 }
 
 .section-label {
+    margin: 3px 7px 10px;
+
     font-size: 10px;
 
     font-weight: 750;
 
-    color: var(--muted);
-
     text-transform: uppercase;
 
-    letter-spacing: 0.8px;
+    letter-spacing: .8px;
 
-    margin: 4px 7px 10px;
+    color: var(--muted);
 }
 
 
 /* Search */
 
-.search-box {
+.search {
     position: relative;
 
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
-.search-box input {
-    width: 100%;
-
-    padding: 10px 12px 10px 34px;
-
-    border: 1px solid var(--border);
-
-    border-radius: 10px;
-
-    background: var(--surface-soft);
-
-    outline: none;
-
-    font-size: 13px;
-
-    color: var(--text);
-}
-
-.search-box span {
+.search-icon {
     position: absolute;
 
-    left: 12px;
+    left: 11px;
     top: 9px;
 
     color: var(--muted);
@@ -210,38 +203,12 @@ body {
     font-size: 14px;
 }
 
+.search input {
+    width: 100%;
 
-/* New patient */
+    height: 36px;
 
-.new-patient {
-    display: flex;
-
-    gap: 7px;
-
-    margin-bottom: 18px;
-}
-
-.new-patient input {
-    min-width: 0;
-    flex: 1;
-}
-
-.new-patient button {
-    width: 40px;
-    flex-shrink: 0;
-}
-
-
-/* Inputs */
-
-input,
-select,
-textarea {
-    font-family: inherit;
-}
-
-input {
-    padding: 9px 10px;
+    padding: 0 10px 0 31px;
 
     border: 1px solid var(--border);
 
@@ -249,50 +216,97 @@ input {
 
     outline: none;
 
-    background: white;
+    background: var(--surface-soft);
+
+    font-size: 12px;
 
     color: var(--text);
-
-    font-size: 13px;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
+.search input:focus {
     border-color: var(--primary);
 
-    box-shadow:
-        0 0 0 3px rgba(20, 125, 115, 0.08);
+    background: white;
 }
 
 
-/* Patient cards */
+/* Create patient */
+
+.create-patient {
+    display: flex;
+
+    gap: 6px;
+
+    margin-bottom: 18px;
+}
+
+.create-patient input {
+    min-width: 0;
+
+    flex: 1;
+
+    height: 35px;
+
+    padding: 0 9px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 12px;
+}
+
+.create-patient button {
+    width: 36px;
+
+    height: 35px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+
+/* Patient list */
 
 .patient-list {
     display: flex;
+
     flex-direction: column;
-    gap: 5px;
+
+    gap: 4px;
 }
 
 .patient-card {
-    display: flex;
-    align-items: center;
-
     width: 100%;
-
-    padding: 10px;
-
-    border-radius: 11px;
 
     border: 1px solid transparent;
 
+    border-radius: 11px;
+
+    padding: 9px;
+
     background: transparent;
 
-    cursor: pointer;
+    display: flex;
+
+    align-items: center;
 
     text-align: left;
 
-    transition: 0.15s ease;
+    cursor: pointer;
+
+    color: var(--text);
 }
 
 .patient-card:hover {
@@ -302,34 +316,35 @@ select:focus {
 .patient-card.active {
     background: var(--primary-soft);
 
-    border-color: #c9e9e4;
+    border-color: #c9e6e2;
 }
 
 .patient-avatar {
     width: 34px;
     height: 34px;
 
+    flex-shrink: 0;
+
+    margin-right: 9px;
+
     border-radius: 50%;
 
     background: #e9eeee;
+
+    color: var(--primary);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    color: var(--primary);
+    font-size: 11px;
 
-    font-weight: 700;
-
-    font-size: 12px;
-
-    margin-right: 10px;
-
-    flex-shrink: 0;
+    font-weight: 750;
 }
 
 .patient-card.active .patient-avatar {
     background: var(--primary);
+
     color: white;
 }
 
@@ -338,39 +353,44 @@ select:focus {
 }
 
 .patient-name {
-    font-size: 13px;
+    font-size: 12.5px;
+
     font-weight: 650;
 
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
 .patient-meta {
-    font-size: 11px;
+    margin-top: 2px;
+
     color: var(--muted);
 
-    margin-top: 2px;
+    font-size: 10px;
 }
 
 
 /* Sidebar footer */
 
 .sidebar-footer {
-    padding: 14px;
+    padding: 13px;
 
     border-top: 1px solid var(--border);
 }
 
 .local-status {
     display: flex;
+
     align-items: center;
 
     padding: 9px;
 
-    background: var(--surface-soft);
-
     border-radius: 10px;
+
+    background: var(--surface-soft);
 }
 
 .status-dot {
@@ -379,63 +399,68 @@ select:focus {
 
     border-radius: 50%;
 
-    background: #27a36a;
+    background: #25a36f;
 
     margin-right: 8px;
 }
 
-.status-text {
-    font-size: 11px;
-}
-
 .status-title {
+    font-size: 11px;
+
     font-weight: 650;
 }
 
 .status-subtitle {
+    font-size: 9px;
+
     color: var(--muted);
-    margin-top: 1px;
+
+    margin-top: 2px;
 }
 
 
-/* --------------------------------------------------
-   CHAT
--------------------------------------------------- */
+/* =========================================================
+   MAIN CHAT
+========================================================= */
 
-.chat {
+.main {
     min-width: 0;
 
     display: flex;
-    flex-direction: column;
 
-    background: var(--bg);
+    flex-direction: column;
 }
 
 
 /* Header */
 
 .chat-header {
-    height: 72px;
+    height: 70px;
+
+    padding: 0 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
 
     background: var(--surface);
 
     border-bottom: 1px solid var(--border);
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 24px;
 }
 
 .patient-header {
     display: flex;
+
     align-items: center;
+
+    min-width: 0;
 }
 
 .header-avatar {
-    width: 40px;
-    height: 40px;
+    width: 39px;
+    height: 39px;
 
     border-radius: 12px;
 
@@ -444,34 +469,45 @@ select:focus {
     color: var(--primary);
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
+    font-size: 12px;
+
     font-weight: 750;
 
-    margin-right: 11px;
+    margin-right: 10px;
+
+    flex-shrink: 0;
 }
 
 .header-name {
     font-size: 14px;
+
     font-weight: 700;
 }
 
 .header-meta {
-    font-size: 11px;
     color: var(--muted);
+
+    font-size: 10px;
 
     margin-top: 3px;
 }
 
+
+/* Header actions */
+
 .header-actions {
     display: flex;
-    gap: 7px;
+
+    gap: 6px;
 }
 
-.icon-button {
-    width: 36px;
-    height: 36px;
+.header-button {
+    width: 34px;
+    height: 34px;
 
     border: 1px solid var(--border);
 
@@ -479,202 +515,199 @@ select:focus {
 
     background: white;
 
-    cursor: pointer;
-
     color: var(--muted);
 
-    font-size: 15px;
-}
-
-.icon-button:hover {
-    background: var(--surface-soft);
+    cursor: pointer;
 }
 
 
-/* Safety */
+/* Safety banner */
 
-.safety {
-    display: flex;
-    align-items: center;
+.banner {
+    padding: 8px 20px;
 
-    gap: 8px;
-
-    padding: 8px 24px;
+    border-bottom: 1px solid #f0ddb8;
 
     background: var(--warning-soft);
 
-    border-bottom: 1px solid #f2dfb5;
-
-    color: #8a621e;
+    color: var(--warning);
 
     font-size: 11px;
 }
 
 
-/* Emergency */
+/* Emergency banner */
 
-.emergency-banner {
+.emergency {
     display: none;
 
-    padding: 14px 22px;
+    padding: 12px 20px;
 
     background: var(--danger-soft);
 
-    border-bottom: 2px solid #e7aaaa;
+    border-bottom: 2px solid #e4a5a5;
 
-    color: #9d2929;
+    color: #9e2929;
 
-    font-size: 13px;
+    font-size: 12px;
 
-    font-weight: 600;
+    font-weight: 650;
 }
 
-.emergency-banner.visible {
+.emergency.visible {
     display: block;
 }
 
 
-/* Messages */
+/* =========================================================
+   CHAT MESSAGES
+========================================================= */
 
 .messages {
     flex: 1;
 
     overflow-y: auto;
 
-    padding: 30px 8% 24px;
+    padding: 28px 8%;
 
     display: flex;
 
     flex-direction: column;
 
-    gap: 18px;
+    gap: 15px;
 }
 
 
 /* Empty state */
 
 .empty-state {
-    margin: auto;
+    width: min(530px, 100%);
 
-    max-width: 520px;
+    margin: auto;
 
     text-align: center;
 }
 
 .empty-icon {
-    width: 62px;
-    height: 62px;
+    width: 60px;
+    height: 60px;
 
-    margin: 0 auto 16px;
+    margin: 0 auto 15px;
 
-    border-radius: 20px;
+    border-radius: 19px;
 
     background: var(--primary-soft);
 
     color: var(--primary);
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    font-size: 28px;
+    font-size: 26px;
 }
 
 .empty-state h2 {
     margin: 0;
 
-    font-size: 22px;
+    font-size: 21px;
 
-    letter-spacing: -0.5px;
+    letter-spacing: -.4px;
 }
 
 .empty-state p {
-    margin: 8px 0 24px;
+    margin: 8px 0 22px;
 
     color: var(--muted);
 
-    font-size: 13px;
+    font-size: 12px;
 
     line-height: 1.6;
 }
 
 
-/* Suggested prompts */
+/* Prompt cards */
 
 .prompt-grid {
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+        repeat(2, 1fr);
 
-    gap: 9px;
+    gap: 8px;
 
     text-align: left;
 }
 
 .prompt {
-    padding: 13px;
-
-    background: white;
+    padding: 12px;
 
     border: 1px solid var(--border);
 
-    border-radius: 12px;
+    border-radius: 11px;
+
+    background: white;
 
     cursor: pointer;
 
-    transition: 0.15s;
+    transition: .15s ease;
 }
 
 .prompt:hover {
-    border-color: #b9dcd7;
-
-    transform: translateY(-1px);
+    border-color: var(--border-hover);
 
     box-shadow: var(--shadow);
+
+    transform: translateY(-1px);
 }
 
 .prompt-icon {
-    font-size: 17px;
+    font-size: 16px;
 
     margin-bottom: 6px;
 }
 
 .prompt-title {
-    font-size: 12px;
+    font-size: 11px;
 
-    font-weight: 650;
+    font-weight: 700;
 }
 
 .prompt-subtitle {
-    font-size: 10px;
+    margin-top: 3px;
 
     color: var(--muted);
 
-    margin-top: 3px;
+    font-size: 9px;
+
+    line-height: 1.4;
 }
 
 
 /* Message */
 
-.message-row {
-    display: flex;
-
-    gap: 10px;
+.message {
+    width: 100%;
 
     max-width: 820px;
 
-    width: 100%;
-
     margin: 0 auto;
+
+    display: flex;
+
+    gap: 9px;
 }
 
-.message-row.user {
+.message.user {
     justify-content: flex-end;
 }
 
 .message-avatar {
-    width: 30px;
-    height: 30px;
+    width: 29px;
+    height: 29px;
+
+    flex-shrink: 0;
 
     border-radius: 9px;
 
@@ -683,15 +716,16 @@ select:focus {
     color: var(--primary);
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    font-size: 13px;
+    font-size: 12px;
 
-    flex-shrink: 0;
+    font-weight: 750;
 }
 
-.message-row.user .message-avatar {
+.message.user .message-avatar {
     display: none;
 }
 
@@ -700,43 +734,49 @@ select:focus {
 }
 
 .message-bubble {
-    padding: 12px 15px;
+    padding: 11px 14px;
 
-    border-radius: 15px;
+    border-radius: 14px;
 
     font-size: 13.5px;
 
-    line-height: 1.6;
+    line-height: 1.55;
 
     white-space: pre-wrap;
 
     word-break: break-word;
 }
 
-.message-row.assistant .message-bubble {
-    background: white;
-
-    border: 1px solid var(--border);
-
-    border-top-left-radius: 4px;
-}
-
-.message-row.user .message-bubble {
+.message.user .message-bubble {
     background: var(--user);
 
     color: white;
 
-    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 
-.message-time {
-    font-size: 9px;
+.message.assistant .message-bubble {
+    background: var(--assistant);
+
+    border: 1px solid var(--border);
+
+    border-bottom-left-radius: 4px;
+}
+
+.message.assistant.emergency .message-bubble {
+    border: 2px solid var(--danger);
+
+    background: var(--danger-soft);
+}
+
+.message-label {
+    margin-top: 4px;
+
+    padding: 0 3px;
 
     color: var(--muted-light);
 
-    margin-top: 5px;
-
-    padding: 0 3px;
+    font-size: 9px;
 }
 
 
@@ -745,12 +785,14 @@ select:focus {
 .thinking {
     display: flex;
 
-    gap: 4px;
+    align-items: center;
 
-    padding: 5px 0;
+    gap: 5px;
+
+    height: 18px;
 }
 
-.thinking span {
+.thinking-dot {
     width: 6px;
     height: 6px;
 
@@ -761,16 +803,19 @@ select:focus {
     animation: thinking 1.2s infinite;
 }
 
-.thinking span:nth-child(2) {
+.thinking-dot:nth-child(2) {
     animation-delay: .15s;
 }
 
-.thinking span:nth-child(3) {
+.thinking-dot:nth-child(3) {
     animation-delay: .3s;
 }
 
 @keyframes thinking {
-    0%, 60%, 100% {
+
+    0%,
+    60%,
+    100% {
         opacity: .25;
         transform: translateY(0);
     }
@@ -782,65 +827,71 @@ select:focus {
 }
 
 
-/* Composer */
+/* =========================================================
+   COMPOSER
+========================================================= */
 
 .composer-area {
-    padding: 12px 8% 20px;
+    padding: 10px 8% 17px;
 
     background:
         linear-gradient(
             to bottom,
-            rgba(245,247,248,0),
-            var(--bg) 15%
+            rgba(244,247,247,0),
+            var(--bg) 18%
         );
 }
 
 .composer {
     max-width: 820px;
 
-    margin: auto;
-
-    background: white;
-
-    border: 1px solid var(--border-dark);
-
-    border-radius: 16px;
-
-    box-shadow:
-        0 6px 25px rgba(22, 35, 40, .07);
+    margin: 0 auto;
 
     display: flex;
 
     align-items: flex-end;
 
-    padding: 8px;
+    padding: 7px;
+
+    background: white;
+
+    border: 1px solid var(--border-hover);
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 7px 25px rgba(25,45,45,.07);
 }
 
 .composer textarea {
     flex: 1;
 
-    border: none;
-
-    outline: none;
-
-    resize: none;
-
     min-height: 42px;
 
     max-height: 130px;
 
+    resize: none;
+
+    border: none;
+
+    outline: none;
+
     padding: 10px;
+
+    background: transparent;
+
+    color: var(--text);
 
     font-size: 13px;
 
     line-height: 1.5;
-
-    color: var(--text);
 }
 
 .send-button {
-    width: 40px;
-    height: 40px;
+    width: 39px;
+    height: 39px;
+
+    flex-shrink: 0;
 
     border: none;
 
@@ -850,11 +901,9 @@ select:focus {
 
     color: white;
 
+    font-size: 17px;
+
     cursor: pointer;
-
-    font-size: 16px;
-
-    flex-shrink: 0;
 }
 
 .send-button:hover {
@@ -870,33 +919,35 @@ select:focus {
 .composer-hint {
     max-width: 820px;
 
-    margin: 7px auto 0;
+    margin: 6px auto 0;
 
     text-align: center;
 
-    font-size: 9px;
-
     color: var(--muted-light);
+
+    font-size: 9px;
 }
 
 
-/* --------------------------------------------------
-   PATIENT PANEL
--------------------------------------------------- */
+/* =========================================================
+   RIGHT PATIENT PANEL
+========================================================= */
 
 .patient-panel {
+    min-width: 0;
+
+    overflow-y: auto;
+
     background: var(--surface);
 
     border-left: 1px solid var(--border);
-
-    overflow-y: auto;
 }
 
 
-/* Patient profile */
+/* Profile */
 
 .profile {
-    padding: 24px 20px 18px;
+    padding: 22px 18px 18px;
 
     border-bottom: 1px solid var(--border);
 }
@@ -908,210 +959,228 @@ select:focus {
 }
 
 .profile-avatar {
-    width: 52px;
-    height: 52px;
+    width: 49px;
+    height: 49px;
 
-    border-radius: 16px;
+    border-radius: 15px;
 
     background: var(--primary);
 
     color: white;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
+    font-size: 15px;
+
     font-weight: 750;
 
-    font-size: 17px;
-
-    margin-right: 12px;
+    margin-right: 11px;
 }
 
 .profile-name {
-    font-size: 15px;
+    font-size: 14px;
 
     font-weight: 750;
 }
 
 .profile-id {
-    font-size: 10px;
-
     color: var(--muted);
 
+    font-size: 9px;
+
     margin-top: 3px;
+}
+
+
+/* Fact sections */
+
+.fact-section {
+    padding: 17px 18px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.fact-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+}
+
+.fact-title {
+    color: var(--muted);
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    letter-spacing: .7px;
+
+    text-transform: uppercase;
+}
+
+.add-button {
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--primary);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
 }
 
 
 /* Fact cards */
 
-.fact-section {
-    padding: 18px 20px;
-
-    border-bottom: 1px solid var(--border);
-}
-
-.fact-section-header {
+.fact-list {
     display: flex;
 
-    align-items: center;
+    flex-direction: column;
 
-    justify-content: space-between;
-
-    margin-bottom: 10px;
-}
-
-.fact-title {
-    font-size: 11px;
-
-    text-transform: uppercase;
-
-    letter-spacing: .7px;
-
-    font-weight: 750;
-
-    color: var(--muted);
-}
-
-.add-button {
-    border: none;
-
-    background: none;
-
-    color: var(--primary);
-
-    cursor: pointer;
-
-    font-size: 11px;
-
-    font-weight: 650;
+    gap: 6px;
 }
 
 .fact-card {
-    border: 1px solid var(--border);
+    padding: 9px 10px;
 
     background: var(--surface-soft);
 
-    border-radius: 11px;
+    border: 1px solid var(--border);
 
-    padding: 10px 11px;
-
-    margin-bottom: 7px;
+    border-radius: 10px;
 }
 
-.fact-card:last-child {
-    margin-bottom: 0;
+.fact-card.allergy {
+    background: var(--danger-soft);
+
+    border-color: #f0d0d0;
 }
 
 .fact-name {
-    font-size: 12px;
+    font-size: 11.5px;
 
     font-weight: 650;
 }
 
+.fact-card.allergy .fact-name {
+    color: #a43232;
+}
+
 .fact-detail {
+    margin-top: 3px;
+
     color: var(--muted);
 
-    font-size: 10px;
-
-    margin-top: 3px;
+    font-size: 9px;
 
     line-height: 1.4;
 }
 
-.allergy-card {
-    background: var(--danger-soft);
+.fact-empty {
+    padding: 8px 2px;
 
-    border-color: #f1d0d0;
-}
+    color: var(--muted-light);
 
-.allergy-card .fact-name {
-    color: #a43131;
+    font-size: 9px;
 }
 
 
 /* Local AI card */
 
-.ai-card {
-    margin: 18px 20px;
+.local-ai {
+    margin: 17px 18px;
 
-    padding: 13px;
+    padding: 12px;
+
+    border: 1px solid #cce6e2;
+
+    border-radius: 11px;
 
     background: var(--primary-soft);
-
-    border: 1px solid #cce8e4;
-
-    border-radius: 12px;
 }
 
-.ai-card-title {
-    font-size: 11px;
-
-    font-weight: 700;
-
+.local-ai-title {
     color: var(--primary-dark);
-}
 
-.ai-card-text {
     font-size: 10px;
 
-    color: #4f7772;
+    font-weight: 750;
+}
 
+.local-ai-text {
     margin-top: 4px;
+
+    color: #4d7772;
+
+    font-size: 9px;
 
     line-height: 1.5;
 }
 
 
-/* --------------------------------------------------
+/* =========================================================
    MODAL
--------------------------------------------------- */
+========================================================= */
 
-.modal-backdrop {
+.modal-overlay {
     position: fixed;
 
     inset: 0;
 
-    background: rgba(17, 28, 32, .38);
+    z-index: 100;
 
     display: none;
 
     align-items: center;
+
     justify-content: center;
 
-    z-index: 100;
+    background: rgba(15,30,30,.4);
 }
 
-.modal-backdrop.open {
+.modal-overlay.open {
     display: flex;
 }
 
 .modal {
-    width: min(430px, calc(100vw - 30px));
+    width: min(420px, calc(100vw - 30px));
+
+    border-radius: 16px;
+
+    overflow: hidden;
 
     background: white;
 
-    border-radius: 17px;
-
-    box-shadow: 0 20px 60px rgba(0,0,0,.2);
-
-    overflow: hidden;
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.2);
 }
 
 .modal-header {
-    padding: 17px 19px;
-
-    border-bottom: 1px solid var(--border);
+    padding: 15px 17px;
 
     display: flex;
 
+    justify-content: space-between;
+
     align-items: center;
 
-    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
 }
 
 .modal-title {
-    font-size: 14px;
+    font-size: 13px;
 
     font-weight: 750;
 }
@@ -1121,40 +1190,52 @@ select:focus {
 
     background: none;
 
-    cursor: pointer;
-
     color: var(--muted);
 
-    font-size: 17px;
+    font-size: 18px;
+
+    cursor: pointer;
 }
 
 .modal-body {
-    padding: 18px;
+    padding: 17px;
 }
 
 .form-group {
-    margin-bottom: 11px;
+    margin-bottom: 10px;
 }
 
 .form-group label {
     display: block;
 
-    font-size: 10px;
-
-    font-weight: 650;
+    margin-bottom: 4px;
 
     color: var(--muted);
 
-    margin-bottom: 5px;
+    font-size: 9px;
+
+    font-weight: 650;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
+
+    height: 35px;
+
+    padding: 0 9px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 11px;
 }
 
 .modal-footer {
-    padding: 12px 18px;
+    padding: 11px 17px;
 
     border-top: 1px solid var(--border);
 
@@ -1165,10 +1246,10 @@ select:focus {
     gap: 7px;
 }
 
-.btn {
-    padding: 9px 13px;
+.modal-button {
+    padding: 8px 12px;
 
-    border-radius: 9px;
+    border-radius: 8px;
 
     border: 1px solid var(--border);
 
@@ -1176,47 +1257,57 @@ select:focus {
 
     cursor: pointer;
 
-    font-size: 12px;
+    font-size: 11px;
 
-    font-weight: 600;
+    font-weight: 650;
 }
 
-.btn-primary {
-    background: var(--primary);
-
+.modal-button.primary {
     border-color: var(--primary);
+
+    background: var(--primary);
 
     color: white;
 }
 
 
-/* --------------------------------------------------
+/* =========================================================
    MOBILE
--------------------------------------------------- */
+========================================================= */
 
 .mobile-menu {
     display: none;
+
+    width: 34px;
+    height: 34px;
+
+    margin-right: 8px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: white;
+
+    cursor: pointer;
 }
 
-@media (max-width: 1050px) {
+@media (max-width: 1080px) {
 
     .app {
         grid-template-columns:
-            220px
+            225px
             minmax(400px, 1fr);
     }
 
     .patient-panel {
         display: none;
     }
+
 }
 
 
 @media (max-width: 720px) {
-
-    body {
-        overflow: hidden;
-    }
 
     .app {
         display: block;
@@ -1227,15 +1318,17 @@ select:focus {
 
         z-index: 50;
 
+        left: -275px;
+
         top: 0;
         bottom: 0;
-        left: -280px;
 
-        width: 270px;
+        width: 265px;
 
-        transition: .2s ease;
+        transition: left .2s ease;
 
-        box-shadow: 10px 0 30px rgba(0,0,0,.12);
+        box-shadow:
+            10px 0 30px rgba(0,0,0,.12);
     }
 
     .sidebar.open {
@@ -1243,29 +1336,15 @@ select:focus {
     }
 
     .mobile-menu {
-        display: flex;
-
-        width: 36px;
-        height: 36px;
-
-        align-items: center;
-        justify-content: center;
-
-        border: 1px solid var(--border);
-
-        border-radius: 9px;
-
-        background: white;
-
-        cursor: pointer;
+        display: block;
     }
 
     .chat-header {
-        padding: 0 12px;
+        padding: 0 11px;
     }
 
     .messages {
-        padding: 22px 12px;
+        padding: 20px 11px;
     }
 
     .composer-area {
@@ -1279,6 +1358,58 @@ select:focus {
     .prompt-grid {
         grid-template-columns: 1fr;
     }
+
+    .banner {
+        padding: 8px 12px;
+    }
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark {
+    --bg: #101817;
+    --surface: #17201f;
+    --surface-soft: #1d2928;
+
+    --border: #2b3937;
+    --border-hover: #3b4c49;
+
+    --text: #edf4f2;
+    --muted: #98a8a5;
+    --muted-light: #70817e;
+
+    --primary-soft: #183a36;
+
+    --assistant: #1c2827;
+
+    --danger-soft: #321d1d;
+
+    --warning-soft: #302a1c;
+}
+
+body.dark .composer,
+body.dark .prompt,
+body.dark .header-button,
+body.dark .patient-card,
+body.dark .modal,
+body.dark .modal-button {
+    background: var(--surface);
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+    background: var(--surface-soft);
+
+    color: var(--text);
+}
+
+body.dark .patient-avatar {
+    background: #273634;
 }
 
 </style>
@@ -1290,9 +1421,9 @@ select:focus {
 <div class="app">
 
 
-<!-- =========================================================
-     LEFT SIDEBAR
-========================================================= -->
+<!-- =====================================================
+     LEFT PATIENT SIDEBAR
+===================================================== -->
 
 <aside class="sidebar" id="sidebar">
 
@@ -1303,10 +1434,15 @@ select:focus {
         </div>
 
         <div>
-            <div class="brand-name">ToomMed</div>
+
+            <div class="brand-name">
+                ToomMED
+            </div>
+
             <div class="brand-subtitle">
                 Local medical assistant
             </div>
+
         </div>
 
     </div>
@@ -1319,9 +1455,11 @@ select:focus {
         </div>
 
 
-        <div class="search-box">
+        <div class="search">
 
-            <span>⌕</span>
+            <span class="search-icon">
+                ⌕
+            </span>
 
             <input
                 id="patient-search"
@@ -1331,16 +1469,15 @@ select:focus {
         </div>
 
 
-        <div class="new-patient">
+        <div class="create-patient">
 
             <input
                 id="new-patient-name"
-                placeholder="Patient name"
+                placeholder="New patient name"
             >
 
             <button
                 id="create-patient-btn"
-                class="icon-button"
                 title="Create patient"
             >
                 +
@@ -1370,7 +1507,7 @@ select:focus {
                 </div>
 
                 <div class="status-subtitle">
-                    Ollama connected
+                    Ollama · Private
                 </div>
 
             </div>
@@ -1383,11 +1520,11 @@ select:focus {
 
 
 
-<!-- =========================================================
-     MAIN CHAT
-========================================================= -->
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
-<main class="chat">
+<main class="main">
 
 
     <header class="chat-header">
@@ -1401,6 +1538,7 @@ select:focus {
                 ☰
             </button>
 
+
             <div
                 class="header-avatar"
                 id="header-avatar"
@@ -1408,18 +1546,19 @@ select:focus {
                 ?
             </div>
 
+
             <div>
 
                 <div
                     class="header-name"
-                    id="header-name"
+                    id="chat-header"
                 >
                     Select a patient
                 </div>
 
                 <div
                     class="header-meta"
-                    id="header-meta"
+                    id="chat-meta"
                 >
                     Create or select a patient to begin
                 </div>
@@ -1432,9 +1571,9 @@ select:focus {
         <div class="header-actions">
 
             <button
-                class="icon-button"
+                class="header-button"
                 id="theme-button"
-                title="Toggle theme"
+                title="Toggle dark mode"
             >
                 ☾
             </button>
@@ -1444,24 +1583,22 @@ select:focus {
     </header>
 
 
-    <div class="safety">
+    <div class="banner">
 
-        <span>⚕</span>
-
-        <span>
-            General medical information only.
-            Not a diagnosis or emergency service.
-        </span>
+        ⚕ General medical information only —
+        not a diagnosis or emergency service.
 
     </div>
 
 
     <div
-        class="emergency-banner"
+        class="emergency"
         id="emergency-banner"
     >
-        🚨 Possible emergency detected. Please seek immediate
-        professional medical help or contact your local emergency service.
+
+        🚨 Possible emergency detected.
+        Please seek immediate professional medical help.
+
     </div>
 
 
@@ -1470,19 +1607,25 @@ select:focus {
         id="messages"
     >
 
-        <div class="empty-state">
+        <div
+            id="empty-state"
+            class="empty-state"
+        >
 
             <div class="empty-icon">
                 ✚
             </div>
 
+
             <h2>
                 Your local health assistant
             </h2>
 
+
             <p>
-                Select a patient and ask ToomMed about symptoms,
-                medications, conditions, or general health information.
+                Select a patient and ask ToomMED about
+                symptoms, medications, conditions,
+                or general health information.
             </p>
 
 
@@ -1492,7 +1635,10 @@ select:focus {
                     class="prompt"
                     data-prompt="Help me understand my current medications."
                 >
-                    <div class="prompt-icon">💊</div>
+
+                    <div class="prompt-icon">
+                        💊
+                    </div>
 
                     <div class="prompt-title">
                         Review medications
@@ -1501,6 +1647,7 @@ select:focus {
                     <div class="prompt-subtitle">
                         Understand medicines and possible questions
                     </div>
+
                 </div>
 
 
@@ -1508,7 +1655,10 @@ select:focus {
                     class="prompt"
                     data-prompt="Help me understand my recorded medical conditions."
                 >
-                    <div class="prompt-icon">❤️</div>
+
+                    <div class="prompt-icon">
+                        ❤️
+                    </div>
 
                     <div class="prompt-title">
                         Understand a condition
@@ -1517,6 +1667,7 @@ select:focus {
                     <div class="prompt-subtitle">
                         Get general educational information
                     </div>
+
                 </div>
 
 
@@ -1524,15 +1675,19 @@ select:focus {
                     class="prompt"
                     data-prompt="What questions should I ask my doctor about my health?"
                 >
-                    <div class="prompt-icon">🩺</div>
+
+                    <div class="prompt-icon">
+                        🩺
+                    </div>
 
                     <div class="prompt-title">
                         Prepare for a doctor visit
                     </div>
 
                     <div class="prompt-subtitle">
-                        Create useful questions to discuss
+                        Create useful questions
                     </div>
+
                 </div>
 
 
@@ -1540,7 +1695,10 @@ select:focus {
                     class="prompt"
                     data-prompt="Explain my medical information in simple language."
                 >
-                    <div class="prompt-icon">💬</div>
+
+                    <div class="prompt-icon">
+                        💬
+                    </div>
 
                     <div class="prompt-title">
                         Explain simply
@@ -1549,6 +1707,7 @@ select:focus {
                     <div class="prompt-subtitle">
                         Make medical information easier to understand
                     </div>
+
                 </div>
 
             </div>
@@ -1562,17 +1721,21 @@ select:focus {
 
         <div class="composer">
 
+            <!-- THIS IS THE ACTUAL CHAT PROMPT -->
+
             <textarea
                 id="msg-input"
-                placeholder="Ask ToomMed anything..."
+                placeholder="Ask ToomMED anything..."
                 disabled
                 rows="1"
             ></textarea>
 
+
             <button
-                class="send-button"
                 id="send-btn"
+                class="send-button"
                 disabled
+                title="Send message"
             >
                 ↑
             </button>
@@ -1582,8 +1745,12 @@ select:focus {
 
         <div class="composer-hint">
 
-            ToomMed can make mistakes.
-            Always consult a qualified healthcare professional.
+            Press Enter to send · Shift + Enter for a new line
+
+            <br>
+
+            ToomMED can make mistakes.
+            Consult a qualified healthcare professional.
 
         </div>
 
@@ -1593,9 +1760,9 @@ select:focus {
 
 
 
-<!-- =========================================================
+<!-- =====================================================
      RIGHT PATIENT PANEL
-========================================================= -->
+===================================================== -->
 
 <aside class="patient-panel">
 
@@ -1617,14 +1784,14 @@ select:focus {
                     class="profile-name"
                     id="profile-name"
                 >
-                    No patient
+                    No patient selected
                 </div>
 
                 <div
                     class="profile-id"
                     id="profile-id"
                 >
-                    Select a patient
+                    Patient information
                 </div>
 
             </div>
@@ -1634,11 +1801,12 @@ select:focus {
     </div>
 
 
-    <!-- Allergies -->
+
+    <!-- ALLERGIES -->
 
     <section class="fact-section">
 
-        <div class="fact-section-header">
+        <div class="fact-header">
 
             <div class="fact-title">
                 🟥 Allergies
@@ -1653,16 +1821,21 @@ select:focus {
 
         </div>
 
-        <div id="allergies-list"></div>
+
+        <div
+            id="allergies-list"
+            class="fact-list"
+        ></div>
 
     </section>
 
 
-    <!-- Medications -->
+
+    <!-- MEDICATIONS -->
 
     <section class="fact-section">
 
-        <div class="fact-section-header">
+        <div class="fact-header">
 
             <div class="fact-title">
                 💊 Medications
@@ -1677,16 +1850,21 @@ select:focus {
 
         </div>
 
-        <div id="medications-list"></div>
+
+        <div
+            id="medications-list"
+            class="fact-list"
+        ></div>
 
     </section>
 
 
-    <!-- Conditions -->
+
+    <!-- CONDITIONS -->
 
     <section class="fact-section">
 
-        <div class="fact-section-header">
+        <div class="fact-header">
 
             <div class="fact-title">
                 ❤️ Conditions
@@ -1701,20 +1879,25 @@ select:focus {
 
         </div>
 
-        <div id="conditions-list"></div>
+
+        <div
+            id="conditions-list"
+            class="fact-list"
+        ></div>
 
     </section>
 
 
-    <div class="ai-card">
 
-        <div class="ai-card-title">
+    <div class="local-ai">
+
+        <div class="local-ai-title">
             🔒 Private local AI
         </div>
 
-        <div class="ai-card-text">
-            Your patient context and conversations are processed
-            locally through Ollama on this machine.
+        <div class="local-ai-text">
+            Your patient context and conversations
+            are processed locally through Ollama.
         </div>
 
     </div>
@@ -1725,13 +1908,13 @@ select:focus {
 
 
 
-<!-- =========================================================
-     FACT MODAL
-========================================================= -->
+<!-- =====================================================
+     MODAL
+===================================================== -->
 
 <div
-    class="modal-backdrop"
-    id="modal-backdrop"
+    class="modal-overlay"
+    id="modal-overlay"
 >
 
     <div class="modal">
@@ -1744,6 +1927,7 @@ select:focus {
             >
                 Add information
             </div>
+
 
             <button
                 class="modal-close"
@@ -1764,14 +1948,15 @@ select:focus {
         <div class="modal-footer">
 
             <button
-                class="btn"
+                class="modal-button"
                 id="modal-cancel"
             >
                 Cancel
             </button>
 
+
             <button
-                class="btn btn-primary"
+                class="modal-button primary"
                 id="modal-save"
             >
                 Save
@@ -1788,12 +1973,14 @@ select:focus {
 <script>
 
 /* =========================================================
-   STATE
+   EXISTING API / STATE
+   The API behavior is intentionally preserved.
 ========================================================= */
 
 const API = "";
 
 let currentPatientId = null;
+
 let patients = [];
 
 let currentFactType = null;
@@ -1815,8 +2002,14 @@ const newPatientName =
 const createPatientBtn =
     document.getElementById("create-patient-btn");
 
-const messages =
+const messagesEl =
     document.getElementById("messages");
+
+const chatHeader =
+    document.getElementById("chat-header");
+
+const chatMeta =
+    document.getElementById("chat-meta");
 
 const msgInput =
     document.getElementById("msg-input");
@@ -1824,74 +2017,73 @@ const msgInput =
 const sendBtn =
     document.getElementById("send-btn");
 
-const headerName =
-    document.getElementById("header-name");
-
-const headerMeta =
-    document.getElementById("header-meta");
-
-const headerAvatar =
-    document.getElementById("header-avatar");
-
-const profileName =
-    document.getElementById("profile-name");
-
-const profileId =
-    document.getElementById("profile-id");
-
-const profileAvatar =
-    document.getElementById("profile-avatar");
+const factsPanel =
+    document.querySelector(".patient-panel");
 
 const emergencyBanner =
     document.getElementById("emergency-banner");
 
-const modalBackdrop =
-    document.getElementById("modal-backdrop");
-
-const modalTitle =
-    document.getElementById("modal-title");
-
-const modalBody =
-    document.getElementById("modal-body");
-
 
 /* =========================================================
-   API
+   API HELPER
 ========================================================= */
 
-async function api(path, options = {}) {
+async function api(path, opts) {
 
-    const response =
-        await fetch(API + path, options);
+    const res =
+        await fetch(API + path, opts);
 
-    if (!response.ok) {
+    if (!res.ok) {
 
         const body =
-            await response.text();
+            await res.text();
 
         throw new Error(
-            `${response.status}: ${body}`
+            `${res.status}: ${body}`
         );
     }
 
-    return response;
-
+    return res;
 }
 
 
 /* =========================================================
-   INITIAL LOAD
+   PATIENTS
 ========================================================= */
 
 async function loadPatients() {
 
-    const response =
+    const res =
         await api("/patients");
 
     patients =
-        await response.json();
+        await res.json();
 
     renderPatients();
+}
+
+
+function getInitials(name) {
+
+    return name
+        .split(/\s+/)
+        .map(part => part[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
 }
 
 
@@ -1901,6 +2093,7 @@ function renderPatients() {
         patientSearch.value
             .trim()
             .toLowerCase();
+
 
     const filtered =
         patients.filter(patient =>
@@ -1916,14 +2109,16 @@ function renderPatients() {
     if (!filtered.length) {
 
         patientList.innerHTML = `
+
             <div style="
-                padding:20px 8px;
+                padding:20px 7px;
+                color:var(--muted-light);
+                font-size:10px;
                 text-align:center;
-                color:var(--muted);
-                font-size:11px;
             ">
                 No patients found
             </div>
+
         `;
 
         return;
@@ -1932,25 +2127,24 @@ function renderPatients() {
 
     filtered.forEach(patient => {
 
-        const card =
+        const button =
             document.createElement("button");
 
-        card.className =
+
+        button.className =
             "patient-card" +
-            (patient.id === currentPatientId
-                ? " active"
-                : "");
+            (
+                patient.id === currentPatientId
+                    ? " active"
+                    : ""
+            );
+
 
         const initials =
-            patient.name
-                .split(/\s+/)
-                .map(x => x[0])
-                .slice(0, 2)
-                .join("")
-                .toUpperCase();
+            getInitials(patient.name);
 
 
-        card.innerHTML = `
+        button.innerHTML = `
 
             <div class="patient-avatar">
                 ${escapeHtml(initials)}
@@ -1967,14 +2161,15 @@ function renderPatients() {
                 </div>
 
             </div>
+
         `;
 
 
-        card.onclick =
+        button.onclick =
             () => selectPatient(patient.id);
 
 
-        patientList.appendChild(card);
+        patientList.appendChild(button);
 
     });
 
@@ -2006,12 +2201,14 @@ async function createPatient() {
     const name =
         newPatientName.value.trim();
 
-    if (!name) return;
+
+    if (!name)
+        return;
 
 
     try {
 
-        const response =
+        const res =
             await api("/patients", {
 
                 method: "POST",
@@ -2021,25 +2218,30 @@ async function createPatient() {
                         "application/json"
                 },
 
-                body: JSON.stringify({
-                    name
-                })
+                body:
+                    JSON.stringify({ name })
 
             });
 
 
         const patient =
-            await response.json();
+            await res.json();
+
 
         newPatientName.value = "";
 
+
         await loadPatients();
 
-        await selectPatient(patient.id);
 
-    } catch (error) {
+        await selectPatient(
+            patient.id
+        );
 
-        alert(error.message);
+
+    } catch (err) {
+
+        alert(err.message);
 
     }
 
@@ -2058,6 +2260,7 @@ async function selectPatient(id) {
 
 
     msgInput.disabled = false;
+
     sendBtn.disabled = false;
 
 
@@ -2070,31 +2273,37 @@ async function selectPatient(id) {
     if (patient) {
 
         const initials =
-            patient.name
-                .split(/\s+/)
-                .map(x => x[0])
-                .slice(0, 2)
-                .join("")
-                .toUpperCase();
+            getInitials(patient.name);
 
 
-        headerName.textContent =
+        chatHeader.textContent =
             patient.name;
 
-        headerMeta.textContent =
+        chatMeta.textContent =
             `Patient #${patient.id} · Local conversation`;
 
 
-        headerAvatar.textContent =
+        document
+            .getElementById("header-avatar")
+            .textContent =
             initials;
 
-        profileAvatar.textContent =
+
+        document
+            .getElementById("profile-avatar")
+            .textContent =
             initials;
 
-        profileName.textContent =
+
+        document
+            .getElementById("profile-name")
+            .textContent =
             patient.name;
 
-        profileId.textContent =
+
+        document
+            .getElementById("profile-id")
+            .textContent =
             `Patient #${patient.id}`;
 
     }
@@ -2105,15 +2314,12 @@ async function selectPatient(id) {
         loadHistory()
     ]);
 
-
-    document
-        .getElementById("sidebar")
-        .classList.remove("open");
 }
 
 
 /* =========================================================
    FACTS
+   Existing endpoint behavior preserved.
 ========================================================= */
 
 async function loadFacts() {
@@ -2122,13 +2328,14 @@ async function loadFacts() {
         return;
 
 
-    const response =
+    const res =
         await api(
             `/patients/${currentPatientId}/summary`
         );
 
+
     const summary =
-        await response.json();
+        await res.json();
 
 
     renderMedications(
@@ -2156,37 +2363,65 @@ function renderMedications(items) {
 
     if (!items.length) {
 
-        container.innerHTML = emptyFact(
-            "No medications recorded"
-        );
+        container.innerHTML =
+            `<div class="fact-empty">
+                None on file
+            </div>`;
 
         return;
     }
 
 
     container.innerHTML =
-        items.map(item => `
+        items.map(m => {
 
-            <div class="fact-card">
+            const when =
+                m.prescribed_date
+                    ? `Prescribed ${m.prescribed_date}`
+                    : `Added ${
+                        new Date(
+                            m.created_at
+                        ).toLocaleDateString()
+                    }`;
 
-                <div class="fact-name">
-                    ${escapeHtml(item.name)}
+
+            const statusBadge =
+                m.status !== "active"
+                    ? ` · ${escapeHtml(
+                        m.status
+                    ).toUpperCase()}`
+                    : "";
+
+
+            return `
+
+                <div class="fact-card">
+
+                    <div class="fact-name">
+                        ${escapeHtml(m.name)}
+                    </div>
+
+                    <div class="fact-detail">
+                        ${escapeHtml(
+                            [
+                                m.dosage,
+                                m.frequency
+                            ]
+                            .filter(Boolean)
+                            .join(" · ")
+                        )}
+                    </div>
+
+                    <div class="fact-detail">
+                        ${escapeHtml(when)}
+                        ${statusBadge}
+                    </div>
+
                 </div>
 
-                <div class="fact-detail">
-                    ${escapeHtml(
-                        [
-                            item.dosage,
-                            item.frequency
-                        ]
-                        .filter(Boolean)
-                        .join(" · ")
-                    )}
-                </div>
+            `;
 
-            </div>
-
-        `).join("");
+        }).join("");
 
 }
 
@@ -2202,37 +2437,55 @@ function renderAllergies(items) {
     if (!items.length) {
 
         container.innerHTML =
-            emptyFact(
-                "No allergies recorded"
-            );
+            `<div class="fact-empty">
+                None on file
+            </div>`;
 
         return;
     }
 
 
     container.innerHTML =
-        items.map(item => `
+        items.map(a => {
 
-            <div class="fact-card allergy-card">
+            const when =
+                a.identified_date
+                    ? `Identified ${a.identified_date}`
+                    : `Added ${
+                        new Date(
+                            a.created_at
+                        ).toLocaleDateString()
+                    }`;
 
-                <div class="fact-name">
-                    ${escapeHtml(item.substance)}
+
+            return `
+
+                <div class="fact-card allergy">
+
+                    <div class="fact-name">
+                        ${escapeHtml(a.substance)}
+                    </div>
+
+                    <div class="fact-detail">
+                        ${escapeHtml(
+                            [
+                                a.reaction,
+                                a.severity
+                            ]
+                            .filter(Boolean)
+                            .join(" · ")
+                        )}
+                    </div>
+
+                    <div class="fact-detail">
+                        ${escapeHtml(when)}
+                    </div>
+
                 </div>
 
-                <div class="fact-detail">
-                    ${escapeHtml(
-                        [
-                            item.reaction,
-                            item.severity
-                        ]
-                        .filter(Boolean)
-                        .join(" · ")
-                    )}
-                </div>
+            `;
 
-            </div>
-
-        `).join("");
+        }).join("");
 
 }
 
@@ -2248,74 +2501,276 @@ function renderConditions(items) {
     if (!items.length) {
 
         container.innerHTML =
-            emptyFact(
-                "No conditions recorded"
-            );
+            `<div class="fact-empty">
+                None on file
+            </div>`;
 
         return;
     }
 
 
     container.innerHTML =
-        items.map(item => `
+        items.map(c => {
 
-            <div class="fact-card">
+            const when =
+                c.diagnosed_date
+                    ? `Diagnosed ${c.diagnosed_date}`
+                    : `Added ${
+                        new Date(
+                            c.created_at
+                        ).toLocaleDateString()
+                    }`;
 
-                <div class="fact-name">
-                    ${escapeHtml(item.name)}
+
+            return `
+
+                <div class="fact-card">
+
+                    <div class="fact-name">
+                        ${escapeHtml(c.name)}
+                    </div>
+
+                    <div class="fact-detail">
+                        ${escapeHtml(
+                            c.status || ""
+                        )}
+                    </div>
+
+                    <div class="fact-detail">
+                        ${escapeHtml(when)}
+                    </div>
+
                 </div>
 
-                <div class="fact-detail">
-                    ${escapeHtml(
-                        item.status || ""
-                    )}
-                </div>
+            `;
 
-            </div>
-
-        `).join("");
-
-}
-
-
-function emptyFact(text) {
-
-    return `
-
-        <div style="
-            padding:10px;
-            color:var(--muted-light);
-            font-size:10px;
-        ">
-            ${text}
-        </div>
-
-    `;
+        }).join("");
 
 }
 
 
 /* =========================================================
-   MODALS
+   ADD MEDICATION
+   Same endpoint and payload as original.
 ========================================================= */
 
-document
-    .querySelectorAll(".add-button")
-    .forEach(button => {
+async function addMedication() {
 
-        button.onclick =
-            () => openFactModal(
-                button.dataset.fact
-            );
-
-    });
+    const name =
+        document
+            .getElementById("med-name")
+            .value
+            .trim();
 
 
-function openFactModal(type) {
+    if (!name || !currentPatientId)
+        return;
+
+
+    await api(
+        `/patients/${currentPatientId}/medications`,
+        {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body:
+                JSON.stringify({
+
+                    name,
+
+                    dosage:
+                        document
+                            .getElementById("med-dosage")
+                            .value
+                            .trim() || null,
+
+                    frequency:
+                        document
+                            .getElementById("med-frequency")
+                            .value
+                            .trim() || null,
+
+                    status:
+                        document
+                            .getElementById("med-status")
+                            .value,
+
+                    prescribed_date:
+                        document
+                            .getElementById(
+                                "med-prescribed-date"
+                            )
+                            .value || null
+
+                })
+
+        }
+    );
+
+
+    await loadFacts();
+
+}
+
+
+/* =========================================================
+   ADD ALLERGY
+========================================================= */
+
+async function addAllergy() {
+
+    const substance =
+        document
+            .getElementById("allergy-substance")
+            .value
+            .trim();
+
+
+    if (!substance || !currentPatientId)
+        return;
+
+
+    await api(
+        `/patients/${currentPatientId}/allergies`,
+        {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body:
+                JSON.stringify({
+
+                    substance,
+
+                    reaction:
+                        document
+                            .getElementById(
+                                "allergy-reaction"
+                            )
+                            .value
+                            .trim() || null,
+
+                    severity:
+                        document
+                            .getElementById(
+                                "allergy-severity"
+                            )
+                            .value
+                            .trim() || null,
+
+                    identified_date:
+                        document
+                            .getElementById(
+                                "allergy-identified-date"
+                            )
+                            .value || null
+
+                })
+
+        }
+    );
+
+
+    await loadFacts();
+
+}
+
+
+/* =========================================================
+   ADD CONDITION
+========================================================= */
+
+async function addCondition() {
+
+    const name =
+        document
+            .getElementById("condition-name")
+            .value
+            .trim();
+
+
+    if (!name || !currentPatientId)
+        return;
+
+
+    await api(
+        `/patients/${currentPatientId}/conditions`,
+        {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body:
+                JSON.stringify({
+
+                    name,
+
+                    status:
+                        document
+                            .getElementById(
+                                "condition-status"
+                            )
+                            .value
+                            .trim() || null,
+
+                    diagnosed_date:
+                        document
+                            .getElementById(
+                                "condition-diagnosed-date"
+                            )
+                            .value || null
+
+                })
+
+        }
+    );
+
+
+    await loadFacts();
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+const modalOverlay =
+    document.getElementById(
+        "modal-overlay"
+    );
+
+const modalTitle =
+    document.getElementById(
+        "modal-title"
+    );
+
+const modalBody =
+    document.getElementById(
+        "modal-body"
+    );
+
+
+function openModal(type) {
 
     if (!currentPatientId) {
 
-        alert("Select a patient first.");
+        alert(
+            "Select a patient first."
+        );
 
         return;
     }
@@ -2324,67 +2779,94 @@ function openFactModal(type) {
     currentFactType = type;
 
 
-    const titles = {
-
-        medication:
-            "Add medication",
-
-        allergy:
-            "Add allergy",
-
-        condition:
-            "Add medical condition"
-
-    };
-
-
-    modalTitle.textContent =
-        titles[type];
-
-
     if (type === "medication") {
+
+        modalTitle.textContent =
+            "Add medication";
+
 
         modalBody.innerHTML = `
 
             <div class="form-group">
-                <label>Medication name</label>
-                <input id="fact-name">
+
+                <label>
+                    Medication name
+                </label>
+
+                <input
+                    id="med-name"
+                    placeholder="e.g. Lisinopril"
+                >
+
             </div>
 
-            <div class="form-group">
-                <label>Dosage</label>
-                <input id="fact-dosage"
-                       placeholder="e.g. 10mg">
-            </div>
 
             <div class="form-group">
-                <label>Frequency</label>
-                <input id="fact-frequency"
-                       placeholder="e.g. once daily">
+
+                <label>
+                    Dosage
+                </label>
+
+                <input
+                    id="med-dosage"
+                    placeholder="e.g. 10mg"
+                >
+
             </div>
 
+
             <div class="form-group">
-                <label>Status</label>
-                <select id="fact-status">
+
+                <label>
+                    Frequency
+                </label>
+
+                <input
+                    id="med-frequency"
+                    placeholder="e.g. once daily"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Status
+                </label>
+
+                <select id="med-status">
+
                     <option value="active">
                         Active
                     </option>
+
                     <option value="past">
                         Past
                     </option>
+
                     <option value="discontinued">
                         Discontinued
                     </option>
+
                 </select>
+
             </div>
 
+
             <div class="form-group">
-                <label>Date prescribed</label>
+
+                <label>
+                    Date prescribed
+                </label>
+
                 <input
-                    id="fact-date"
+                    id="med-prescribed-date"
                     type="date"
                 >
+
             </div>
+
         `;
 
     }
@@ -2392,42 +2874,65 @@ function openFactModal(type) {
 
     if (type === "allergy") {
 
+        modalTitle.textContent =
+            "Add allergy";
+
+
         modalBody.innerHTML = `
 
             <div class="form-group">
-                <label>Substance</label>
-                <input id="fact-substance">
-            </div>
 
-            <div class="form-group">
-                <label>Reaction</label>
-                <input id="fact-reaction">
-            </div>
+                <label>
+                    Substance
+                </label>
 
-            <div class="form-group">
-                <label>Severity</label>
-                <select id="fact-severity">
-                    <option value="">
-                        Select severity
-                    </option>
-                    <option value="mild">
-                        Mild
-                    </option>
-                    <option value="moderate">
-                        Moderate
-                    </option>
-                    <option value="severe">
-                        Severe
-                    </option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Date identified</label>
                 <input
-                    id="fact-date"
+                    id="allergy-substance"
+                    placeholder="e.g. Penicillin"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Reaction
+                </label>
+
+                <input
+                    id="allergy-reaction"
+                    placeholder="e.g. Rash"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Severity
+                </label>
+
+                <input
+                    id="allergy-severity"
+                    placeholder="mild / moderate / severe"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Date identified
+                </label>
+
+                <input
+                    id="allergy-identified-date"
                     type="date"
                 >
+
             </div>
 
         `;
@@ -2437,27 +2942,51 @@ function openFactModal(type) {
 
     if (type === "condition") {
 
+        modalTitle.textContent =
+            "Add condition";
+
+
         modalBody.innerHTML = `
 
             <div class="form-group">
-                <label>Condition</label>
-                <input id="fact-condition">
-            </div>
 
-            <div class="form-group">
-                <label>Status</label>
+                <label>
+                    Condition name
+                </label>
+
                 <input
-                    id="fact-status"
-                    placeholder="active / chronic / resolved"
+                    id="condition-name"
+                    placeholder="e.g. Hypertension"
                 >
+
             </div>
 
+
             <div class="form-group">
-                <label>Date diagnosed</label>
+
+                <label>
+                    Status
+                </label>
+
                 <input
-                    id="fact-date"
+                    id="condition-status"
+                    placeholder="active / resolved / chronic"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Date diagnosed
+                </label>
+
+                <input
+                    id="condition-diagnosed-date"
                     type="date"
                 >
+
             </div>
 
         `;
@@ -2465,14 +2994,14 @@ function openFactModal(type) {
     }
 
 
-    modalBackdrop.classList.add("open");
+    modalOverlay.classList.add("open");
 
 }
 
 
 function closeModal() {
 
-    modalBackdrop.classList.remove("open");
+    modalOverlay.classList.remove("open");
 
     currentFactType = null;
 
@@ -2483,227 +3012,118 @@ document
     .getElementById("modal-close")
     .onclick = closeModal;
 
+
 document
     .getElementById("modal-cancel")
     .onclick = closeModal;
 
 
-modalBackdrop.addEventListener(
+modalOverlay.addEventListener(
     "click",
     event => {
 
-        if (event.target === modalBackdrop) {
+        if (
+            event.target === modalOverlay
+        ) {
+
             closeModal();
+
         }
 
     }
 );
 
 
-/* Save fact */
-
 document
     .getElementById("modal-save")
-    .onclick = saveFact;
+    .onclick = async () => {
+
+        try {
+
+            if (
+                currentFactType ===
+                "medication"
+            ) {
+
+                await addMedication();
+
+            }
 
 
-async function saveFact() {
+            if (
+                currentFactType ===
+                "allergy"
+            ) {
 
-    if (!currentFactType ||
-        !currentPatientId)
-        return;
+                await addAllergy();
 
-
-    try {
-
-        let path;
-        let body;
+            }
 
 
-        if (currentFactType === "medication") {
+            if (
+                currentFactType ===
+                "condition"
+            ) {
 
-            const name =
-                document
-                    .getElementById("fact-name")
-                    .value
-                    .trim();
+                await addCondition();
 
-
-            if (!name)
-                return;
+            }
 
 
-            path =
-                `/patients/${currentPatientId}/medications`;
+            closeModal();
 
+        } catch (err) {
 
-            body = {
-
-                name,
-
-                dosage:
-                    document
-                        .getElementById("fact-dosage")
-                        .value
-                        .trim() || null,
-
-                frequency:
-                    document
-                        .getElementById("fact-frequency")
-                        .value
-                        .trim() || null,
-
-                status:
-                    document
-                        .getElementById("fact-status")
-                        .value,
-
-                prescribed_date:
-                    document
-                        .getElementById("fact-date")
-                        .value || null
-
-            };
+            alert(err.message);
 
         }
 
-
-        if (currentFactType === "allergy") {
-
-            const substance =
-                document
-                    .getElementById("fact-substance")
-                    .value
-                    .trim();
+    };
 
 
-            if (!substance)
-                return;
+document
+    .querySelectorAll(".add-button")
+    .forEach(button => {
 
+        button.onclick =
+            () =>
+                openModal(
+                    button.dataset.fact
+                );
 
-            path =
-                `/patients/${currentPatientId}/allergies`;
-
-
-            body = {
-
-                substance,
-
-                reaction:
-                    document
-                        .getElementById("fact-reaction")
-                        .value
-                        .trim() || null,
-
-                severity:
-                    document
-                        .getElementById("fact-severity")
-                        .value || null,
-
-                identified_date:
-                    document
-                        .getElementById("fact-date")
-                        .value || null
-
-            };
-
-        }
-
-
-        if (currentFactType === "condition") {
-
-            const name =
-                document
-                    .getElementById("fact-condition")
-                    .value
-                    .trim();
-
-
-            if (!name)
-                return;
-
-
-            path =
-                `/patients/${currentPatientId}/conditions`;
-
-
-            body = {
-
-                name,
-
-                status:
-                    document
-                        .getElementById("fact-status")
-                        .value
-                        .trim() || null,
-
-                diagnosed_date:
-                    document
-                        .getElementById("fact-date")
-                        .value || null
-
-            };
-
-        }
-
-
-        await api(path, {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type":
-                    "application/json"
-            },
-
-            body:
-                JSON.stringify(body)
-
-        });
-
-
-        closeModal();
-
-        await loadFacts();
-
-
-    } catch (error) {
-
-        alert(error.message);
-
-    }
-
-}
+    });
 
 
 /* =========================================================
    CHAT HISTORY
+   Existing endpoint preserved.
 ========================================================= */
 
 async function loadHistory() {
 
-    messages.innerHTML = "";
+    messagesEl.innerHTML = "";
 
 
     if (!currentPatientId)
         return;
 
 
-    const response =
+    const res =
         await api(
             `/patients/${currentPatientId}/history`
         );
 
 
     const history =
-        await response.json();
+        await res.json();
 
 
-    if (!history.length) {
+    if (history.length === 0) {
 
         renderEmptyState();
 
         return;
+
     }
 
 
@@ -2724,21 +3144,27 @@ async function loadHistory() {
 
 function renderEmptyState() {
 
-    messages.innerHTML = `
+    messagesEl.innerHTML = `
 
-        <div class="empty-state">
+        <div
+            id="empty-state"
+            class="empty-state"
+        >
 
             <div class="empty-icon">
                 ✚
             </div>
 
+
             <h2>
                 How can I help?
             </h2>
 
+
             <p>
-                Ask a question about symptoms, medications,
-                conditions, or general health information.
+                Ask ToomMED about symptoms,
+                medications, conditions,
+                or general health information.
             </p>
 
 
@@ -2748,13 +3174,19 @@ function renderEmptyState() {
                     class="prompt"
                     data-prompt="Help me understand my current medications."
                 >
-                    <div class="prompt-icon">💊</div>
+
+                    <div class="prompt-icon">
+                        💊
+                    </div>
+
                     <div class="prompt-title">
                         Review medications
                     </div>
+
                     <div class="prompt-subtitle">
                         Understand your medicines
                     </div>
+
                 </div>
 
 
@@ -2762,13 +3194,19 @@ function renderEmptyState() {
                     class="prompt"
                     data-prompt="Help me understand my recorded medical conditions."
                 >
-                    <div class="prompt-icon">❤️</div>
+
+                    <div class="prompt-icon">
+                        ❤️
+                    </div>
+
                     <div class="prompt-title">
                         Understand a condition
                     </div>
+
                     <div class="prompt-subtitle">
                         Learn the basics
                     </div>
+
                 </div>
 
 
@@ -2776,13 +3214,19 @@ function renderEmptyState() {
                     class="prompt"
                     data-prompt="What questions should I ask my doctor about my health?"
                 >
-                    <div class="prompt-icon">🩺</div>
+
+                    <div class="prompt-icon">
+                        🩺
+                    </div>
+
                     <div class="prompt-title">
                         Prepare for a doctor visit
                     </div>
+
                     <div class="prompt-subtitle">
-                        Make a useful question list
+                        Make useful questions
                     </div>
+
                 </div>
 
 
@@ -2790,13 +3234,19 @@ function renderEmptyState() {
                     class="prompt"
                     data-prompt="Explain my medical information in simple language."
                 >
-                    <div class="prompt-icon">💬</div>
+
+                    <div class="prompt-icon">
+                        💬
+                    </div>
+
                     <div class="prompt-title">
                         Explain simply
                     </div>
+
                     <div class="prompt-subtitle">
                         Reduce medical jargon
                     </div>
+
                 </div>
 
             </div>
@@ -2815,17 +3265,22 @@ function renderEmptyState() {
    MESSAGE RENDERING
 ========================================================= */
 
-function renderMessage(role, content) {
+function renderMessage(
+    role,
+    content
+) {
 
     const row =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     row.className =
-        `message-row ${role}`;
+        `message ${role}`;
 
 
-    const initials =
+    const avatar =
         role === "assistant"
             ? "✚"
             : "";
@@ -2834,17 +3289,20 @@ function renderMessage(role, content) {
     row.innerHTML = `
 
         <div class="message-avatar">
-            ${initials}
+            ${avatar}
         </div>
+
 
         <div class="message-content">
 
             <div class="message-bubble"></div>
 
-            <div class="message-time">
-                ${role === "assistant"
-                    ? "ToomMed"
-                    : "You"}
+            <div class="message-label">
+                ${
+                    role === "assistant"
+                        ? "ToomMED"
+                        : "You"
+                }
             </div>
 
         </div>
@@ -2858,14 +3316,19 @@ function renderMessage(role, content) {
         );
 
 
-    bubble.textContent = content;
+    bubble.textContent =
+        content;
 
 
     if (
-        content
+        String(content)
             .toLowerCase()
             .includes("emergency")
     ) {
+
+        row.classList.add(
+            "emergency"
+        );
 
         emergencyBanner
             .classList
@@ -2874,7 +3337,7 @@ function renderMessage(role, content) {
     }
 
 
-    messages.appendChild(row);
+    messagesEl.appendChild(row);
 
 
     scrollMessages();
@@ -2885,14 +3348,20 @@ function renderMessage(role, content) {
 }
 
 
-function renderThinking() {
+/* =========================================================
+   THINKING
+========================================================= */
+
+function renderThinkingBubble() {
 
     const row =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     row.className =
-        "message-row assistant";
+        "message assistant";
 
 
     row.innerHTML = `
@@ -2901,15 +3370,16 @@ function renderThinking() {
             ✚
         </div>
 
+
         <div class="message-content">
 
             <div class="message-bubble">
 
                 <div class="thinking">
 
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span class="thinking-dot"></span>
+                    <span class="thinking-dot"></span>
+                    <span class="thinking-dot"></span>
 
                 </div>
 
@@ -2920,9 +3390,10 @@ function renderThinking() {
     `;
 
 
-    messages.appendChild(row);
+    messagesEl.appendChild(row);
 
     scrollMessages();
+
 
     return row;
 
@@ -2930,7 +3401,9 @@ function renderThinking() {
 
 
 /* =========================================================
-   SEND MESSAGE
+   ACTUAL CHAT
+   IMPORTANT:
+   This preserves your original streaming implementation.
 ========================================================= */
 
 async function sendMessage() {
@@ -2942,23 +3415,32 @@ async function sendMessage() {
     if (
         !text ||
         !currentPatientId
-    ) return;
+    ) {
+
+        return;
+
+    }
 
 
     msgInput.value = "";
 
     autoResize();
 
+
     sendBtn.disabled = true;
 
 
-    const empty =
-        document.querySelector(
-            ".empty-state"
+    const emptyState =
+        document.getElementById(
+            "empty-state"
         );
 
-    if (empty)
-        empty.remove();
+
+    if (emptyState) {
+
+        emptyState.remove();
+
+    }
 
 
     renderMessage(
@@ -2967,13 +3449,24 @@ async function sendMessage() {
     );
 
 
-    const thinking =
-        renderThinking();
+    const assistantRow =
+        renderThinkingBubble();
+
+
+    const assistantBubble =
+        assistantRow.querySelector(
+            ".message-bubble"
+        );
 
 
     try {
 
-        const response =
+        /*
+         * EXACT SAME API REQUEST
+         * AS THE ORIGINAL ToomMED UI.
+         */
+
+        const res =
             await api(
                 `/patients/${currentPatientId}/chat`,
                 {
@@ -2985,20 +3478,26 @@ async function sendMessage() {
                             "application/json"
                     },
 
-                    body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        message: text,
+                            message: text,
 
-                        stream: true
+                            stream: true
 
-                    })
+                        })
 
                 }
             );
 
 
+        /*
+         * EXACT SAME STREAMING BEHAVIOR.
+         */
+
         const reader =
-            response.body.getReader();
+            res.body.getReader();
+
 
         const decoder =
             new TextDecoder();
@@ -3024,13 +3523,8 @@ async function sendMessage() {
 
             if (firstChunk) {
 
-                thinking.remove();
-
-                var assistantBubble =
-                    renderMessage(
-                        "assistant",
-                        ""
-                    );
+                assistantBubble
+                    .textContent = "";
 
                 firstChunk = false;
 
@@ -3040,19 +3534,29 @@ async function sendMessage() {
             full +=
                 decoder.decode(
                     value,
-                    {stream: true}
+                    {
+                        stream: true
+                    }
                 );
 
 
-            assistantBubble.textContent =
+            assistantBubble
+                .textContent =
                 full;
 
 
             if (
                 full
                     .toLowerCase()
-                    .includes("emergency")
+                    .includes(
+                        "emergency"
+                    )
             ) {
+
+                assistantRow
+                    .classList
+                    .add("emergency");
+
 
                 emergencyBanner
                     .classList
@@ -3066,15 +3570,11 @@ async function sendMessage() {
         }
 
 
-    } catch (error) {
+    } catch (err) {
 
-        thinking.remove();
-
-        renderMessage(
-            "assistant",
-            "Sorry, something went wrong: " +
-            error.message
-        );
+        assistantBubble.textContent =
+            "Error: " +
+            err.message;
 
     } finally {
 
@@ -3082,14 +3582,24 @@ async function sendMessage() {
 
         loadFacts();
 
+        msgInput.focus();
+
     }
 
 }
 
 
+/* =========================================================
+   SEND BUTTON
+========================================================= */
+
 sendBtn.onclick =
     sendMessage;
 
+
+/* =========================================================
+   ENTER TO SEND
+========================================================= */
 
 msgInput.addEventListener(
     "keydown",
@@ -3111,7 +3621,7 @@ msgInput.addEventListener(
 
 
 /* =========================================================
-   TEXTAREA
+   AUTO RESIZE CHAT INPUT
 ========================================================= */
 
 msgInput.addEventListener(
@@ -3125,6 +3635,7 @@ function autoResize() {
     msgInput.style.height =
         "auto";
 
+
     msgInput.style.height =
         Math.min(
             msgInput.scrollHeight,
@@ -3135,7 +3646,7 @@ function autoResize() {
 
 
 /* =========================================================
-   PROMPTS
+   SUGGESTED PROMPTS
 ========================================================= */
 
 function attachPromptHandlers() {
@@ -3149,8 +3660,13 @@ function attachPromptHandlers() {
             prompt.onclick =
                 () => {
 
-                    if (!currentPatientId)
+                    if (
+                        !currentPatientId
+                    ) {
+
                         return;
+
+                    }
 
 
                     msgInput.value =
@@ -3172,7 +3688,17 @@ attachPromptHandlers();
 
 
 /* =========================================================
-   MOBILE MENU
+   SEARCH
+========================================================= */
+
+patientSearch.addEventListener(
+    "input",
+    renderPatients
+);
+
+
+/* =========================================================
+   MOBILE SIDEBAR
 ========================================================= */
 
 document
@@ -3188,56 +3714,22 @@ document
 
 
 /* =========================================================
-   THEME
+   DARK MODE
 ========================================================= */
 
 document
     .getElementById("theme-button")
     .onclick = () => {
 
-        document.body.classList.toggle(
-            "dark"
-        );
+        document.body
+            .classList
+            .toggle("dark");
 
     };
 
 
 /* =========================================================
-   SEARCH
-========================================================= */
-
-patientSearch.addEventListener(
-    "input",
-    renderPatients
-);
-
-
-/* =========================================================
-   UTILITIES
-========================================================= */
-
-function scrollMessages() {
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-}
-
-
-function escapeHtml(value) {
-
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-
-}
-
-
-/* =========================================================
-   START
+   INITIAL LOAD
 ========================================================= */
 
 loadPatients();
