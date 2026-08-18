@@ -52,11 +52,43 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 def index():
-    """Serve the UI with a cache-busted chat enhancement script."""
+    """Serve the UI with cache-busted chat enhancements and a robust fixed composer."""
     html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
-    fix = '<script src="/static/chat-fix.js?v=20260818-gemini"></script>'
+
+    # Keep the composer visible even when a patient has a long chat history.
+    # In a column flex layout, the default min-height:auto on .messages can
+    # prevent it from shrinking, pushing the composer below the viewport.
+    layout_fix = """
+<style id="toommed-composer-layout-fix">
+.main {
+    min-height: 0 !important;
+}
+
+.messages {
+    min-height: 0 !important;
+    overflow-y: auto !important;
+}
+
+.composer-area {
+    flex-shrink: 0 !important;
+    position: relative;
+    z-index: 20;
+}
+
+.composer {
+    position: relative;
+    z-index: 21;
+}
+</style>
+"""
+
+    if "toommed-composer-layout-fix" not in html:
+        html = html.replace("</head>", f"{layout_fix}\n</head>")
+
+    fix = '<script src="/static/chat-fix.js?v=20260818-gemini-layout2"></script>'
     if fix not in html:
         html = html.replace("</body>", f"{fix}\n</body>")
+
     return HTMLResponse(content=html)
 
 
