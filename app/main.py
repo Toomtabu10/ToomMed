@@ -1,7 +1,8 @@
 """
-FastAPI service pairing a local Ollama medical model with persistent,
-per-patient memory: structured facts (medications/allergies/conditions)
-plus chat history, stored in a local SQLite file.
+FastAPI service pairing a cloud Gemini LLM with persistent, per-patient memory.
+
+The FastAPI service and SQLite patient database remain on the local machine.
+Only chat requests assembled for the LLM are sent to Gemini.
 
 Run:
     uvicorn app.main:app --reload --port 8000
@@ -13,15 +14,15 @@ from typing import Optional
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, HTTPException
-from fastapi.responses import StreamingResponse, HTMLResponse, FileResponse
+from fastapi.responses import StreamingResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from . import config, models, schemas, memory
 from .database import Base, engine, get_db
-from .ollama_client import MedicalOllamaClient, ModelNotAvailableError
+from .ollama_client import MedicalGeminiClient, ModelNotAvailableError
 
-medical_client: Optional[MedicalOllamaClient] = None
+medical_client: Optional[MedicalGeminiClient] = None
 
 
 @asynccontextmanager
@@ -29,19 +30,18 @@ async def lifespan(app: FastAPI):
     global medical_client
     Base.metadata.create_all(bind=engine)
     try:
-        medical_client = MedicalOllamaClient()
+        medical_client = MedicalGeminiClient()
     except ModelNotAvailableError as e:
         raise RuntimeError(str(e)) from e
     yield
 
 
 app = FastAPI(
-    title="Local Medical LLM with Patient Memory (Ollama-backed)",
+    title="ToomMED — Local Patient Memory + Gemini",
     description=(
-        "Runs entirely on your local machine via Ollama. Provides general "
-        "medical information only - not a diagnostic or emergency service. "
-        "Structured patient facts are edited only through explicit "
-        "endpoints, never inferred automatically from chat."
+        "Keeps structured patient facts and chat history in local SQLite while "
+        "using Gemini for online language-model inference. General medical "
+        "information only — not a diagnostic or emergency service."
     ),
     lifespan=lifespan,
 )
@@ -54,7 +54,7 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 def index():
     """Serve the UI with a cache-busted chat enhancement script."""
     html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
-    fix = '<script src="/static/chat-fix.js?v=20260818"></script>'
+    fix = '<script src="/static/chat-fix.js?v=20260818-gemini"></script>'
     if fix not in html:
         html = html.replace("</body>", f"{fix}\n</body>")
     return HTMLResponse(content=html)
@@ -69,7 +69,7 @@ def get_patient_or_404(patient_id: int, db: Session) -> models.Patient:
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "model": config.MODEL_NAME, "ollama_host": config.OLLAMA_HOST}
+    return {"status": "ok", "model": config.GEMINI_MODEL, "llm": "gemini"}
 
 
 @app.post("/patients", response_model=schemas.PatientOut)
@@ -178,7 +178,7 @@ def chat_history(patient_id: int, db: Session = Depends(get_db)):
 @app.post("/patients/{patient_id}/chat", response_model=None)
 def chat(patient_id: int, req: schemas.ChatRequest, db: Session = Depends(get_db)):
     if medical_client is None:
-        raise HTTPException(status_code=503, detail="Model client not initialized")
+        raise HTTPException(status_code=503, detail="Gemini client not initialized")
 
     patient = get_patient_or_404(patient_id, db)
     patient_context = memory.build_patient_context(patient)
@@ -189,10 +189,13 @@ def chat(patient_id: int, req: schemas.ChatRequest, db: Session = Depends(get_db
     if req.stream:
         def token_stream():
             full_reply = ""
-            for chunk in medical_client.chat_stream(req.message, history, patient_context):
-                full_reply += chunk
-                yield chunk
-            memory.save_message(db, patient_id, "assistant", full_reply)
+            try:
+                for chunk in medical_client.chat_stream(req.message, history, patient_context):
+                    full_reply += chunk
+                    yield chunk
+            finally:
+                if full_reply:
+                    memory.save_message(db, patient_id, "assistant", full_reply)
         return StreamingResponse(token_stream(), media_type="text/plain")
 
     reply = medical_client.chat(req.message, history, patient_context)
