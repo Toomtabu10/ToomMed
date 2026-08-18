@@ -14,9 +14,7 @@ class PatientOut(BaseModel):
     name: str
     notes: Optional[str] = None
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # --- Medication ---
@@ -32,9 +30,7 @@ class MedicationCreate(BaseModel):
 class MedicationOut(MedicationCreate):
     id: int
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # --- Allergy ---
@@ -48,9 +44,7 @@ class AllergyCreate(BaseModel):
 class AllergyOut(AllergyCreate):
     id: int
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # --- Condition ---
@@ -64,9 +58,7 @@ class ConditionCreate(BaseModel):
 class ConditionOut(ConditionCreate):
     id: int
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 # --- Message / Chat ---
@@ -74,9 +66,7 @@ class MessageOut(BaseModel):
     role: str
     content: str
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 class ChatRequest(BaseModel):

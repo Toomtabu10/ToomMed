@@ -12,7 +12,7 @@ editing the record.
 
 from app.database import Base, engine, SessionLocal
 from app import models, memory
-from app.ollama_client import MedicalOllamaClient, ModelNotAvailableError
+from app.ollama_client import MedicalGeminiClient, ModelNotAvailableError
 from app import config
 
 
@@ -43,9 +43,9 @@ def main():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
 
-    print(f"Loading model '{config.MODEL_NAME}' via Ollama at {config.OLLAMA_HOST} ...")
+    print(f"Loading model '{config.GEMINI_MODEL}' via Gemini ...")
     try:
-        client = MedicalOllamaClient()
+        client = MedicalGeminiClient()
     except ModelNotAvailableError as e:
         print(f"\n{e}\n")
         return
