@@ -1,7 +1,9 @@
-/* ToomMED UI enhancement
-   Leaves the existing chat implementation completely intact.
-   Adds a guaranteed visible thinking indicator while a message is being generated.
+/* ToomMED live chat UX
+   Uses the backend streaming endpoint so the UI can show real progress.
+   The timer proves the request is still alive; once the first token arrives,
+   the status changes from Thinking to Generating.
 */
+
 (function () {
     "use strict";
 
@@ -15,164 +17,245 @@
             return;
         }
 
-        let thinking = null;
-        let thinkingTimer = null;
+        const patientId = () => window.currentPatientId;
 
-        function showThinking() {
-            if (thinking) return;
+        function scrollToBottom() {
+            messages.scrollTop = messages.scrollHeight;
+        }
 
-            thinking = document.createElement("div");
-            thinking.id = "toommed-thinking-status";
-            thinking.innerHTML = `
-                <span class="toommed-thinking-icon">✚</span>
-                <span>ToomMED is thinking<span class="thinking-dots">...</span></span>
+        function addUserMessage(text) {
+            const row = document.createElement("div");
+            row.className = "message user";
+            row.innerHTML = `
+                <div class="message-content">
+                    <div class="message-bubble"></div>
+                </div>
             `;
-
-            const composer = document.querySelector(".composer-area");
-            if (composer) {
-                composer.parentElement.insertBefore(thinking, composer);
-            } else {
-                messages.appendChild(thinking);
-            }
-
-            requestAnimationFrame(() => {
-                if (thinking) thinking.classList.add("visible");
-            });
+            row.querySelector(".message-bubble").textContent = text;
+            messages.appendChild(row);
+            scrollToBottom();
         }
 
-        function hideThinking() {
-            if (thinkingTimer) {
-                clearTimeout(thinkingTimer);
-                thinkingTimer = null;
-            }
-            if (!thinking) return;
-            thinking.classList.remove("visible");
-            const old = thinking;
-            thinking = null;
-            setTimeout(() => old.remove(), 180);
+        function addThinkingMessage() {
+            const row = document.createElement("div");
+            row.className = "message assistant thinking-message";
+            row.innerHTML = `
+                <div class="message-avatar thinking-avatar">✚</div>
+                <div class="message-content">
+                    <div class="message-bubble thinking-bubble">
+                        <div class="live-thinking">
+                            <span class="live-spinner">✚</span>
+                            <span class="live-status">ToomMED is thinking...</span>
+                            <span class="live-time">0s</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            messages.appendChild(row);
+            scrollToBottom();
+            return row;
         }
 
-        function startThinking() {
-            showThinking();
-
-            // If the model responds extremely quickly, keep the indicator visible
-            // long enough for the user to actually see it.
-            thinkingTimer = setTimeout(() => {}, 120);
+        function addAssistantMessage() {
+            const row = document.createElement("div");
+            row.className = "message assistant";
+            row.innerHTML = `
+                <div class="message-avatar">✚</div>
+                <div class="message-content">
+                    <div class="message-bubble"></div>
+                    <div class="message-label">ToomMED</div>
+                </div>
+            `;
+            messages.appendChild(row);
+            return row;
         }
 
-        function finishThinking() {
-            hideThinking();
+        async function reliableSendMessage() {
+            const text = input.value.trim();
+            const id = patientId();
+
+            if (!text) return;
+            if (!id) {
+                alert("Select a patient first.");
+                return;
+            }
+
+            input.value = "";
+            input.style.height = "auto";
+            input.disabled = true;
+            send.disabled = true;
+
+            const empty = document.getElementById("empty-state");
+            if (empty) empty.remove();
+
+            addUserMessage(text);
+            const thinking = addThinkingMessage();
+            const status = thinking.querySelector(".live-status");
+            const timerLabel = thinking.querySelector(".live-time");
+            const started = Date.now();
+            let timer = setInterval(() => {
+                timerLabel.textContent = `${Math.floor((Date.now() - started) / 1000)}s`;
+                scrollToBottom();
+            }, 250);
+
+            try {
+                const response = await fetch(`/patients/${id}/chat`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "text/plain"
+                    },
+                    body: JSON.stringify({ message: text, stream: true })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || `HTTP ${response.status}`);
+                }
+
+                if (!response.body) {
+                    throw new Error("Streaming is not supported by this browser.");
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let reply = "";
+                let gotFirstToken = false;
+                let assistantRow = null;
+                let assistantBubble = null;
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    if (!chunk) continue;
+
+                    if (!gotFirstToken) {
+                        gotFirstToken = true;
+                        status.textContent = "ToomMED is generating...";
+                        thinking.querySelector(".live-spinner").classList.add("generating");
+                    }
+
+                    reply += chunk;
+
+                    if (!assistantRow) {
+                        assistantRow = addAssistantMessage();
+                        assistantBubble = assistantRow.querySelector(".message-bubble");
+                    }
+
+                    assistantBubble.textContent = reply;
+                    scrollToBottom();
+                }
+
+                const finalChunk = decoder.decode();
+                if (finalChunk) {
+                    reply += finalChunk;
+                    if (!assistantRow) {
+                        assistantRow = addAssistantMessage();
+                        assistantBubble = assistantRow.querySelector(".message-bubble");
+                    }
+                    assistantBubble.textContent = reply;
+                }
+
+                thinking.remove();
+
+                if (!assistantRow) {
+                    assistantRow = addAssistantMessage();
+                    assistantRow.querySelector(".message-bubble").textContent = "No response received.";
+                }
+
+                const lower = reply.toLowerCase();
+                if (lower.includes("emergency")) {
+                    const banner = document.getElementById("emergency-banner");
+                    if (banner) banner.classList.add("visible");
+                    assistantRow.classList.add("emergency");
+                }
+
+                scrollToBottom();
+
+                if (typeof window.loadFacts === "function") {
+                    window.loadFacts().catch(console.error);
+                }
+
+            } catch (error) {
+                thinking.remove();
+                const row = addAssistantMessage();
+                row.querySelector(".message-avatar").textContent = "!";
+                row.querySelector(".message-bubble").textContent =
+                    `Unable to get a response. ${error.message}`;
+                console.error("ToomMED chat error:", error);
+                scrollToBottom();
+            } finally {
+                clearInterval(timer);
+                input.disabled = false;
+                send.disabled = false;
+                input.focus();
+            }
         }
 
-        // Mouse/click sending: capture before the existing onclick runs.
-        send.addEventListener("click", function () {
-            if (input.value.trim() && !send.disabled) {
-                startThinking();
+        send.onclick = reliableSendMessage;
+        input.onkeydown = function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                reliableSendMessage();
             }
-        }, true);
+        };
+        input.oninput = function () {
+            input.style.height = "auto";
+            input.style.height = Math.min(input.scrollHeight, 130) + "px";
+        };
 
-        // Enter sending: capture before the existing keydown handler runs.
-        input.addEventListener("keydown", function (event) {
-            if (event.key === "Enter" && !event.shiftKey && input.value.trim() && !send.disabled) {
-                startThinking();
-            }
-        }, true);
+        if (!Object.prototype.hasOwnProperty.call(window, "currentPatientId")) {
+            try {
+                Object.defineProperty(window, "currentPatientId", {
+                    configurable: true,
+                    get: function () {
+                        return typeof currentPatientId !== "undefined" ? currentPatientId : null;
+                    }
+                });
+            } catch (_) {}
+        }
 
-        // The existing sendMessage() creates an assistant bubble. Watch for
-        // its first real text and remove the status at that point.
-        const observer = new MutationObserver(function () {
-            if (!thinking) return;
-
-            const assistantRows = messages.querySelectorAll(".message.assistant");
-            if (!assistantRows.length) return;
-
-            const last = assistantRows[assistantRows.length - 1];
-            const bubble = last.querySelector(".message-bubble");
-
-            // The built-in thinking bubble has no text. Once Ollama sends the
-            // first real chunk, the bubble contains actual response text.
-            if (bubble && bubble.textContent.trim()) {
-                finishThinking();
-            }
-        });
-
-        observer.observe(messages, {
-            childList: true,
-            subtree: true,
-            characterData: true
-        });
-
-        // Also hide it when the send button becomes enabled again.
-        const buttonObserver = new MutationObserver(function () {
-            if (thinking && !send.disabled) {
-                finishThinking();
-            }
-        });
-        buttonObserver.observe(send, {
-            attributes: true,
-            attributeFilter: ["disabled"]
-        });
-
-        console.log("ToomMED thinking indicator installed.");
+        console.log("ToomMED live streaming chat installed.");
     }
 
     const style = document.createElement("style");
     style.textContent = `
-        #toommed-thinking-status {
-            width: min(820px, 84%);
-            margin: 0 auto;
-            min-height: 38px;
+        .thinking-bubble { padding: 11px 14px !important; }
+        .live-thinking {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 7px 13px;
+            gap: 9px;
+            min-height: 25px;
             color: var(--muted);
             font-size: 11px;
-            opacity: 0;
-            transform: translateY(5px);
-            transition: opacity .18s ease, transform .18s ease;
-            pointer-events: none;
+            white-space: nowrap;
         }
-
-        #toommed-thinking-status.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toommed-thinking-icon {
-            width: 28px;
-            height: 28px;
-            flex: 0 0 28px;
+        .live-spinner {
+            width: 25px;
+            height: 25px;
+            border-radius: 8px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border-radius: 9px;
             background: var(--primary-soft);
             color: var(--primary);
-            font-size: 16px;
-            font-weight: 700;
-            animation: toommed-thinking-spin 1s linear infinite;
+            font-size: 15px;
+            animation: toommed-spin 0.9s linear infinite;
         }
-
-        .thinking-dots {
-            display: inline-block;
-            width: 18px;
-            text-align: left;
-            animation: toommed-thinking-pulse 1s steps(4, end) infinite;
+        .live-spinner.generating { animation-duration: .45s; }
+        .live-status { font-weight: 600; }
+        .live-time {
+            color: var(--muted-light);
+            min-width: 22px;
+            font-variant-numeric: tabular-nums;
         }
-
-        @keyframes toommed-thinking-spin {
+        @keyframes toommed-spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
-        @keyframes toommed-thinking-pulse {
-            0% { opacity: .25; }
-            50% { opacity: 1; }
-            100% { opacity: .25; }
-        }
     `;
-
     document.head.appendChild(style);
 
     if (document.readyState === "loading") {
